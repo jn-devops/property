@@ -26,7 +26,6 @@ it('can be derived from price and development type', function () {
     expect(MarketSegment::fromPrice(Price::of(2500000, 'PHP'), DevelopmentType::VERTICAL))->toBe(MarketSegment::ECONOMIC);
     expect(MarketSegment::fromPrice(Price::of(2500001, 'PHP'), DevelopmentType::VERTICAL))->toBe(MarketSegment::OPEN);
 
-
     expect(MarketSegment::fromPrice(Price::PHP(84999900)))->toBe(MarketSegment::SOCIALIZED);
     expect(MarketSegment::fromPrice(Price::PHP(85000000)))->toBe(MarketSegment::SOCIALIZED);
     expect(MarketSegment::fromPrice(Price::PHP(90000000)))->toBe(MarketSegment::ECONOMIC);

@@ -2,9 +2,9 @@
 
 namespace Homeful\Property;
 
+use Homeful\Property\Commands\PropertyCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Homeful\Property\Commands\PropertyCommand;
 
 class PropertyServiceProvider extends PackageServiceProvider
 {

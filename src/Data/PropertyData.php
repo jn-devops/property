@@ -16,7 +16,8 @@ class PropertyData extends Data
         public float $loanable_value,
         public float $disposable_income_requirement_multiplier,
         public float $default_disposable_income_requirement_multiplier,
-    ) {}
+    ) {
+    }
 
     public static function fromObject(Property $property): self
     {

@@ -10,21 +10,16 @@ enum MarketSegment: string
     case ECONOMIC = 'economic';
     case SOCIALIZED = 'socialized';
 
-    /**
-     * @param Price $total_contract_price
-     * @param DevelopmentType $developmentType
-     * @return self
-     */
-    static public function fromPrice(Price $total_contract_price, DevelopmentType $developmentType = DevelopmentType::HORIZONTAL): self
+    public static function fromPrice(Price $total_contract_price, DevelopmentType $developmentType = DevelopmentType::HORIZONTAL): self
     {
         return with($total_contract_price->base()->getAmount()->toFloat(), function ($value) use ($developmentType) {
             return match ($developmentType) {
-                DevelopmentType::HORIZONTAL => match(true) {
+                DevelopmentType::HORIZONTAL => match (true) {
                     $value <= config('property.market.ceiling.horizontal.socialized') => MarketSegment::SOCIALIZED,
                     $value <= config('property.market.ceiling.horizontal.economic') => MarketSegment::ECONOMIC,
                     default => MarketSegment::OPEN
                 },
-                DevelopmentType::VERTICAL => match(true) {
+                DevelopmentType::VERTICAL => match (true) {
                     $value <= config('property.market.ceiling.vertical.socialized') => MarketSegment::SOCIALIZED,
                     $value <= config('property.market.ceiling.vertical.economic') => MarketSegment::ECONOMIC,
                     default => MarketSegment::OPEN
@@ -33,24 +28,18 @@ enum MarketSegment: string
         });
     }
 
-    /**
-     * @return float
-     */
     public function defaultDisposableIncomeRequirementMultiplier(): float
     {
-        return match($this) {
+        return match ($this) {
             self::OPEN => config('property.market.disposable-income-requirement-multiplier.open', 0.30), // 30%
             self::ECONOMIC => config('property.market.disposable-income-requirement-multiplier.economic', 0.35), //35%
             self::SOCIALIZED => config('property.market.disposable-income-requirement-multiplier.socialized', 0.35), //35%
         };
     }
 
-    /**
-     * @return float
-     */
     public function defaultLoanableValueMultiplier(): float
     {
-        return match($this) {
+        return match ($this) {
             self::OPEN => config('property.market.loanable-value-multiplier.open', 0.90), // 90%
             self::ECONOMIC => config('property.market.loanable-value-multiplier.economic', 0.95), //95%
             self::SOCIALIZED => config('property.market.loanable-value-multiplier.socialized', 1.00), //100%

@@ -2,42 +2,29 @@
 
 namespace Homeful\Property\Classes;
 
-use Whitecube\Price\PriceAmendable;
 use Brick\Money\AbstractMoney;
-use Homeful\Property\Property;
-use Whitecube\Price\Vat;
 use Brick\Money\Money;
+use Homeful\Property\Property;
+use Whitecube\Price\PriceAmendable;
+use Whitecube\Price\Vat;
 
 class LoanableModifier implements PriceAmendable
 {
-    /**
-     * @var string
-     */
     protected string $type;
 
-    /**
-     * @return string
-     */
     public function type(): string
     {
         return $this->type;
     }
 
-    /**
-     * @var Property
-     */
     protected Property $property;
 
-    /**
-     * @param Property $property
-     */
     public function __construct(Property $property)
     {
         $this->property = $property;
     }
 
     /**
-     * @param string|null $type
      * @return $this
      */
     public function setType(?string $type = null): static
@@ -47,17 +34,11 @@ class LoanableModifier implements PriceAmendable
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function key(): ?string
     {
         return 'loanable';
     }
 
-    /**
-     * @return array|null
-     */
     public function attributes(): ?array
     {
         return [
@@ -67,28 +48,20 @@ class LoanableModifier implements PriceAmendable
         ];
     }
 
-    /**
-     * @return bool
-     */
     public function appliesAfterVat(): bool
     {
         return false;
     }
 
     /**
-     * @param AbstractMoney $build
-     * @param float $units
-     * @param bool $perUnit
-     * @param AbstractMoney|null $exclusive
-     * @param Vat|null $vat
-     * @return AbstractMoney|null
      * @throws \Brick\Math\Exception\MathException
      */
-    public function apply(AbstractMoney $build, float $units, bool $perUnit, AbstractMoney $exclusive = null, Vat $vat = null): ?AbstractMoney
+    public function apply(AbstractMoney $build, float $units, bool $perUnit, ?AbstractMoney $exclusive = null, ?Vat $vat = null): ?AbstractMoney
     {
-        if ($build instanceof Money)
+        if ($build instanceof Money) {
             return $build->multipliedBy($this->property->getLoanableValueMultiplier());
-        else
+        } else {
             return null;
+        }
     }
 }

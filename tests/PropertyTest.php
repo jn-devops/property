@@ -1,10 +1,10 @@
 <?php
 
-use Homeful\Property\Enums\MarketSegment;
+use Brick\Money\Money;
 use Homeful\Property\Data\PropertyData;
+use Homeful\Property\Enums\MarketSegment;
 use Homeful\Property\Property;
 use Whitecube\Price\Price;
-use Brick\Money\Money;
 
 it('can get market segment from tcp', function () {
     $property = new Property;
