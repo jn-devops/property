@@ -6,7 +6,7 @@ use Homeful\Property\Enums\MarketSegment;
 use Homeful\Property\Property;
 use Whitecube\Price\Price;
 
-it('has market segments', function() {
+it('has market segments', function () {
     expect(MarketSegment::OPEN->getName())->toBe(config('property.market.segment.open'));
     expect(MarketSegment::OPEN->getName())->toBe('middle-income');
     expect(MarketSegment::ECONOMIC->getName())->toBe(config('property.market.segment.economic'));
