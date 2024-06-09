@@ -42,7 +42,7 @@ class LoanableModifier implements PriceAmendable
     public function attributes(): ?array
     {
         return [
-            'market_segment' => $this->property->getMarketSegment()->value,
+            'market_segment' => $this->property->getMarketSegment()->getName(),
             'default_loanable_value_multiplier' => $this->property->getDefaultLoanableValueMultiplier(),
             'loanable_value_multiplier' => $this->property->getLoanableValueMultiplier(),
         ];

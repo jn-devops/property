@@ -2,6 +2,11 @@
 
 return [
     'market' => [
+        'segment' => [
+            'open' => env('MARKET_SEGMENT_OPEN', 'middle-income'),
+            'economic' => env('MARKET_SEGMENT_ECONOMIC', 'economic'),
+            'socialized' => env('MARKET_SEGMENT_SOCIALIZED', 'socialized')
+        ],
         'ceiling' => [
             'horizontal' => [
                 'economic' => env('HORIZONTAL_ECONOMIC_MARKET_CEILING', 2500000),

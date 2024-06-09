@@ -4,11 +4,11 @@ namespace Homeful\Property\Enums;
 
 use Whitecube\Price\Price;
 
-enum MarketSegment: string
+enum MarketSegment
 {
-    case OPEN = 'open';
-    case ECONOMIC = 'economic';
-    case SOCIALIZED = 'socialized';
+    case OPEN;
+    case ECONOMIC;
+    case SOCIALIZED;
 
     public static function fromPrice(Price $total_contract_price, DevelopmentType $developmentType = DevelopmentType::HORIZONTAL): self
     {
@@ -26,6 +26,15 @@ enum MarketSegment: string
                 },
             };
         });
+    }
+
+    public function getName(): string
+    {
+        return match ($this) {
+            self::OPEN => config('property.market.segment.open', 'open'), // open
+            self::ECONOMIC => config('property.market.segment.economic', 'economic'), //economic
+            self::SOCIALIZED => config('property.market.segment.socialized', 'socialized'), //socialized
+        };
     }
 
     public function defaultDisposableIncomeRequirementMultiplier(): float

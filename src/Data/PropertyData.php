@@ -22,7 +22,7 @@ class PropertyData extends Data
     public static function fromObject(Property $property): self
     {
         return new self(
-            market_segment: $property->getMarketSegment()->value,
+            market_segment: $property->getMarketSegment()->getName(),
             total_contract_price: $property->getTotalContractPrice()->inclusive()->getAmount()->toFloat(),
             appraised_value: $property->getAppraisedValue()->inclusive()->getAmount()->toFloat(),
             default_loanable_value_multiplier: $property->getDefaultLoanableValueMultiplier(),

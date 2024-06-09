@@ -6,6 +6,15 @@ use Homeful\Property\Enums\MarketSegment;
 use Homeful\Property\Property;
 use Whitecube\Price\Price;
 
+it('has market segments', function() {
+    expect(MarketSegment::OPEN->getName())->toBe(config('property.market.segment.open'));
+    expect(MarketSegment::OPEN->getName())->toBe('middle-income');
+    expect(MarketSegment::ECONOMIC->getName())->toBe(config('property.market.segment.economic'));
+    expect(MarketSegment::ECONOMIC->getName())->toBe('economic');
+    expect(MarketSegment::SOCIALIZED->getName())->toBe(config('property.market.segment.socialized'));
+    expect(MarketSegment::SOCIALIZED->getName())->toBe('socialized');
+});
+
 it('can get market segment from tcp', function () {
     $property = new Property;
     expect($property->setTotalContractPrice(new Price(Money::of(750000, 'PHP')))->getMarketSegment())->toBe(MarketSegment::SOCIALIZED);
@@ -142,7 +151,7 @@ it('has property data', function () {
     $property = new Property;
     $property->setTotalContractPrice(new Price(Money::of(750000, 'PHP')))->setAppraisedValue(new Price(Money::of(740000, 'PHP')));
     $data = PropertyData::fromObject($property);
-    expect($data->market_segment)->toBe($property->getMarketSegment()->value);
+    expect($data->market_segment)->toBe($property->getMarketSegment()->getName());
     expect($data->total_contract_price)->toBe($property->getTotalContractPrice()->inclusive()->getAmount()->toFloat());
     expect($data->appraised_value)->toBe($property->getAppraisedValue()->inclusive()->getAmount()->toFloat());
     expect($data->default_loanable_value_multiplier)->toBe($property->getDefaultLoanableValueMultiplier());
