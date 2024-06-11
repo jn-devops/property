@@ -2,11 +2,12 @@
 
 namespace Homeful\Property;
 
-use Exception;
+use Homeful\Property\Exceptions\{MaximumContractPriceBreached, MinimumContractPriceBreached};
 use Homeful\Property\Classes\LoanableModifier;
 use Homeful\Property\Enums\DevelopmentType;
 use Homeful\Property\Enums\MarketSegment;
 use Whitecube\Price\Price;
+use Exception;
 
 class Property
 {
@@ -33,18 +34,13 @@ class Property
 
     protected float $disposableIncomeRequirementMultiplier = 0.0;
 
-    /**
-     * @return $this
-     *
-     * @throws Exception
-     */
     public function setTotalContractPrice(Price $value): self
     {
         if ($value->inclusive()->compareTo(self::MINIMUM_CONTRACT_PRICE) == -1) {
-            throw new Exception('minimum contract price not met');
+            throw new MinimumContractPriceBreached;
         }
         if ($value->inclusive()->compareTo(self::MAXIMUM_CONTRACT_PRICE) == 1) {
-            throw new Exception('minimum contract price not met');
+            throw new MaximumContractPriceBreached;
         } //TODO: Lester make some exceptions.
 
         $this->total_contract_price = $value;
