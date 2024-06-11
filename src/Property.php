@@ -2,12 +2,13 @@
 
 namespace Homeful\Property;
 
-use Homeful\Property\Exceptions\{MaximumContractPriceBreached, MinimumContractPriceBreached};
+use Exception;
 use Homeful\Property\Classes\LoanableModifier;
 use Homeful\Property\Enums\DevelopmentType;
 use Homeful\Property\Enums\MarketSegment;
+use Homeful\Property\Exceptions\MaximumContractPriceBreached;
+use Homeful\Property\Exceptions\MinimumContractPriceBreached;
 use Whitecube\Price\Price;
-use Exception;
 
 class Property
 {

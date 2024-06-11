@@ -1,20 +1,21 @@
 <?php
 
-use Homeful\Property\Exceptions\{MaximumContractPriceBreached, MinimumContractPriceBreached};
-use Homeful\Property\Enums\MarketSegment;
+use Brick\Money\Money;
 use Homeful\Property\Data\PropertyData;
+use Homeful\Property\Enums\MarketSegment;
+use Homeful\Property\Exceptions\MaximumContractPriceBreached;
+use Homeful\Property\Exceptions\MinimumContractPriceBreached;
 use Homeful\Property\Property;
 use Whitecube\Price\Price;
-use Brick\Money\Money;
 
 it('has minimum price', function () {
     $property = new Property;
-    $property->setTotalContractPrice(new Price(Money::of(Property::MINIMUM_CONTRACT_PRICE-1, 'PHP')));
+    $property->setTotalContractPrice(new Price(Money::of(Property::MINIMUM_CONTRACT_PRICE - 1, 'PHP')));
 })->expectException(MinimumContractPriceBreached::class);
 
 it('has maximum price', function () {
     $property = new Property;
-    $property->setTotalContractPrice(new Price(Money::of(Property::MAXIMUM_CONTRACT_PRICE+1, 'PHP')));
+    $property->setTotalContractPrice(new Price(Money::of(Property::MAXIMUM_CONTRACT_PRICE + 1, 'PHP')));
 })->expectException(MaximumContractPriceBreached::class);
 
 it('has market segments', function () {
