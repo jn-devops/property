@@ -2,6 +2,10 @@
 
 All notable changes to `property` will be documented in this file.
 
+## #v1.0.4 - 2024-06-18
+
+fix getTotalContractPrice() and getAppraisedValue()
+
 ## #v1.0.3 - 2024-06-11
 
 add min and max price exceptions
