@@ -2,13 +2,14 @@
 
 namespace Homeful\Property;
 
-use Exception;
+use Homeful\Property\Exceptions\MaximumContractPriceBreached;
+use Homeful\Property\Exceptions\MinimumContractPriceBreached;
 use Homeful\Property\Classes\LoanableModifier;
 use Homeful\Property\Enums\DevelopmentType;
 use Homeful\Property\Enums\MarketSegment;
-use Homeful\Property\Exceptions\MaximumContractPriceBreached;
-use Homeful\Property\Exceptions\MinimumContractPriceBreached;
 use Whitecube\Price\Price;
+use Brick\Money\Money;
+use Exception;
 
 class Property
 {
@@ -51,7 +52,7 @@ class Property
 
     public function getTotalContractPrice(): Price
     {
-        return $this->total_contract_price;
+        return $this->total_contract_price ?? new Price(Money::of(0, 'PHP'));
     }
 
     /**
@@ -66,7 +67,7 @@ class Property
 
     public function getAppraisedValue(): Price
     {
-        return $this->appraised_value;
+        return $this->appraised_value ?? new Price(Money::of(0, 'PHP'));
     }
 
     public function getMarketSegment(): MarketSegment
@@ -106,11 +107,12 @@ class Property
 
     public function getLoanableValue(): Price
     {
-        $price = new Price($this->appraised_value->compareTo($this->total_contract_price) == -1
-            ? $this->appraised_value->inclusive()
-            : $this->total_contract_price->inclusive()
+        $appraised_value = $this->getAppraisedValue();
+        $total_contract_price = $this->getTotalContractPrice();
+        $price = new Price(($appraised_value->compareTo($total_contract_price) == -1)
+                                    ? $appraised_value->inclusive()
+                                    : $total_contract_price->inclusive()
         );
-
         $price->addModifier('loanable', LoanableModifier::class, $this);
 
         return $price;
