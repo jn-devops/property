@@ -7,6 +7,10 @@ use Homeful\Property\Exceptions\MaximumContractPriceBreached;
 use Homeful\Property\Exceptions\MinimumContractPriceBreached;
 use Homeful\Property\Property;
 use Whitecube\Price\Price;
+use Homeful\Common\Interfaces\BorrowerInterface;
+use Mockery\MockInterface;
+use Illuminate\Support\Carbon;
+use Propaganistas\LaravelPhone\PhoneNumber;
 
 it('has minimum price', function () {
     $property = new Property;
@@ -172,3 +176,70 @@ it('has property data', function () {
     expect($data->disposable_income_requirement_multiplier)->toBe($property->getDefaultDisposableIncomeRequirementMultiplier());
     expect($data->default_disposable_income_requirement_multiplier)->toBe($property->getDefaultDisposableIncomeRequirementMultiplier());
 });
+
+dataset('borrower-30yo-25k_gmi', function () {
+    return [
+        fn () => tap(Mock(BorrowerInterface::class), function (MockInterface $mock) {
+            $mock->shouldReceive('getRegional')->andReturn(true);
+            $mock->shouldReceive('getGrossMonthlyIncome')->andReturn(new Price(Money::of(12000, 'PHP')));
+        }),
+    ];
+});
+
+dataset('guess-interest-rates', function () {
+    return [
+        fn () => ['regional' => true,  'gmi' => 12000, 'tcp' => 749999,  'guess_interest_rate' => 0.030],
+        fn () => ['regional' => false, 'gmi' => 12000, 'tcp' => 749999,  'guess_interest_rate' => 0.030],
+        fn () => ['regional' => true,  'gmi' => 12000, 'tcp' => 750000,  'guess_interest_rate' => 0.030],
+        fn () => ['regional' => false, 'gmi' => 12000, 'tcp' => 750000,  'guess_interest_rate' => 0.030],
+
+        fn () => ['regional' => true,  'gmi' => 14500, 'tcp' => 749999,  'guess_interest_rate' => 0.0625],
+        fn () => ['regional' => false, 'gmi' => 14500, 'tcp' => 749999,  'guess_interest_rate' => 0.030],
+        fn () => ['regional' => true,  'gmi' => 14500, 'tcp' => 750000,  'guess_interest_rate' => 0.0625],
+        fn () => ['regional' => false, 'gmi' => 14500, 'tcp' => 750000,  'guess_interest_rate' => 0.030],
+
+        fn () => ['regional' => true,  'gmi' => 13000, 'tcp' => 799999,  'guess_interest_rate' => 0.030],
+        fn () => ['regional' => false, 'gmi' => 13000, 'tcp' => 799999,  'guess_interest_rate' => 0.030],
+        fn () => ['regional' => true,  'gmi' => 13000, 'tcp' => 800000,  'guess_interest_rate' => 0.030],
+        fn () => ['regional' => false, 'gmi' => 13000, 'tcp' => 800000,  'guess_interest_rate' => 0.030],
+
+        fn () => ['regional' => true,  'gmi' => 15500, 'tcp' => 799999,  'guess_interest_rate' => 0.0625],
+        fn () => ['regional' => false, 'gmi' => 15500, 'tcp' => 799999,  'guess_interest_rate' => 0.030],
+        fn () => ['regional' => true,  'gmi' => 15500, 'tcp' => 800000,  'guess_interest_rate' => 0.0625],
+        fn () => ['regional' => false, 'gmi' => 15500, 'tcp' => 800000,  'guess_interest_rate' => 0.030],
+
+        fn () => ['regional' => true,  'gmi' => 15000, 'tcp' => 849999,  'guess_interest_rate' => 0.030],
+        fn () => ['regional' => false, 'gmi' => 15000, 'tcp' => 849999,  'guess_interest_rate' => 0.030],
+        fn () => ['regional' => true,  'gmi' => 15001, 'tcp' => 849999,  'guess_interest_rate' => 0.0625],
+        fn () => ['regional' => false, 'gmi' => 15001, 'tcp' => 849999,  'guess_interest_rate' => 0.030],
+
+        fn () => ['regional' => true,  'gmi' => 16500, 'tcp' => 849999,  'guess_interest_rate' => 0.0625],
+        fn () => ['regional' => false, 'gmi' => 16500, 'tcp' => 849999,  'guess_interest_rate' => 0.030],
+        fn () => ['regional' => true,  'gmi' => 16501, 'tcp' => 849999,  'guess_interest_rate' => 0.0625],
+        fn () => ['regional' => false, 'gmi' => 16501, 'tcp' => 849999,  'guess_interest_rate' => 0.0625],
+
+        fn () => ['regional' => true,  'gmi' => 16500, 'tcp' => 850000,  'guess_interest_rate' => 0.0625],
+        fn () => ['regional' => false, 'gmi' => 16500, 'tcp' => 850000,  'guess_interest_rate' => 0.030],
+        fn () => ['regional' => true,  'gmi' => 16501, 'tcp' => 850000,  'guess_interest_rate' => 0.0625],
+        fn () => ['regional' => false, 'gmi' => 16501, 'tcp' => 850000,  'guess_interest_rate' => 0.0625],
+
+        fn () => ['regional' => true,  'gmi' => 16500, 'tcp' => 850001,  'guess_interest_rate' => 0.0625],
+        fn () => ['regional' => false, 'gmi' => 16500, 'tcp' => 850001,  'guess_interest_rate' => 0.0625],
+
+        fn () => ['regional' => true,  'gmi' => 16500, 'tcp' => 2500000, 'guess_interest_rate' => 0.0625],
+        fn () => ['regional' => false, 'gmi' => 16500, 'tcp' => 2500000, 'guess_interest_rate' => 0.0625],
+
+        fn () => ['regional' => true,  'gmi' => 16500, 'tcp' => 2500001, 'guess_interest_rate' => 0.0700],
+        fn () => ['regional' => false, 'gmi' => 16500, 'tcp' => 2500001, 'guess_interest_rate' => 0.0700],
+    ];
+});
+
+it('has default interest rate per market segment', function (array $params) {
+    $property = new Property;
+    $borrower = tap(Mock(BorrowerInterface::class), function (MockInterface $mock) use ($params) {$mock
+        ->shouldReceive('getRegional')->andReturn($params['regional'])
+        ->shouldReceive('getGrossMonthlyIncome')->andReturn(new Price(Money::of($params['gmi'], 'PHP')));
+    });
+    expect($property->setTotalContractPrice(new Price(Money::of($params['tcp'], 'PHP')))->getDefaultAnnualInterestRate($borrower))
+        ->toBe($params['guess_interest_rate']);
+})->with('guess-interest-rates');

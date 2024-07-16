@@ -10,6 +10,7 @@ use Homeful\Property\Enums\MarketSegment;
 use Homeful\Property\Exceptions\MaximumContractPriceBreached;
 use Homeful\Property\Exceptions\MinimumContractPriceBreached;
 use Whitecube\Price\Price;
+use Homeful\Common\Interfaces\BorrowerInterface;
 
 class Property
 {
@@ -146,5 +147,24 @@ class Property
     public function getDisposableIncomeRequirementMultiplier(): float
     {
         return $this->disposableIncomeRequirementMultiplier ?: $this->getDefaultDisposableIncomeRequirementMultiplier();
+    }
+
+    public function getDefaultAnnualInterestRate(BorrowerInterface $borrower): float
+    {
+        return match (true) {
+            $this->getMarketSegment() == MarketSegment::OPEN => 0.07,
+            default => match (true) {
+                $this->getTotalContractPrice()->inclusive()->compareTo(750000) <= 0 => ($borrower->getRegional()
+                    ? ($borrower->getGrossMonthlyIncome()->inclusive()->compareTo(12000) <= 0 ? 0.030 : 0.0625)
+                    : ($borrower->getGrossMonthlyIncome()->inclusive()->compareTo(14500) <= 0 ? 0.030 : 0.0625)),
+                $this->getTotalContractPrice()->inclusive()->compareTo(800000) <= 0 => ($borrower->getRegional()
+                    ? ($borrower->getGrossMonthlyIncome()->inclusive()->compareTo(13000) <= 0 ? 0.030 : 0.0625)
+                    : ($borrower->getGrossMonthlyIncome()->inclusive()->compareTo(15500) <= 0 ? 0.030 : 0.0625)),
+                $this->getTotalContractPrice()->inclusive()->compareTo(850000) <= 0 => ($borrower->getRegional()
+                    ? ($borrower->getGrossMonthlyIncome()->inclusive()->compareTo(15000) <= 0 ? 0.030 : 0.0625)
+                    : ($borrower->getGrossMonthlyIncome()->inclusive()->compareTo(16500) <= 0 ? 0.030 : 0.0625)),
+                default => 0.0625,
+            }
+        };
     }
 }
