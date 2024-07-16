@@ -1,16 +1,14 @@
 <?php
 
 use Brick\Money\Money;
+use Homeful\Common\Interfaces\BorrowerInterface;
 use Homeful\Property\Data\PropertyData;
 use Homeful\Property\Enums\MarketSegment;
 use Homeful\Property\Exceptions\MaximumContractPriceBreached;
 use Homeful\Property\Exceptions\MinimumContractPriceBreached;
 use Homeful\Property\Property;
-use Whitecube\Price\Price;
-use Homeful\Common\Interfaces\BorrowerInterface;
 use Mockery\MockInterface;
-use Illuminate\Support\Carbon;
-use Propaganistas\LaravelPhone\PhoneNumber;
+use Whitecube\Price\Price;
 
 it('has minimum price', function () {
     $property = new Property;
@@ -236,9 +234,10 @@ dataset('guess-interest-rates', function () {
 
 it('has default interest rate per market segment', function (array $params) {
     $property = new Property;
-    $borrower = tap(Mock(BorrowerInterface::class), function (MockInterface $mock) use ($params) {$mock
-        ->shouldReceive('getRegional')->andReturn($params['regional'])
-        ->shouldReceive('getGrossMonthlyIncome')->andReturn(new Price(Money::of($params['gmi'], 'PHP')));
+    $borrower = tap(Mock(BorrowerInterface::class), function (MockInterface $mock) use ($params) {
+        $mock
+            ->shouldReceive('getRegional')->andReturn($params['regional'])
+            ->shouldReceive('getGrossMonthlyIncome')->andReturn(new Price(Money::of($params['gmi'], 'PHP')));
     });
     expect($property->setTotalContractPrice(new Price(Money::of($params['tcp'], 'PHP')))->getDefaultAnnualInterestRate($borrower))
         ->toBe($params['guess_interest_rate']);
