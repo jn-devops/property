@@ -2,6 +2,10 @@
 
 All notable changes to `property` will be documented in this file.
 
+## #v1.05 - 2024-07-16
+
+add getDefaultAnnualInterestRate
+
 ## #v1.0.4 - 2024-06-18
 
 fix getTotalContractPrice() and getAppraisedValue()
