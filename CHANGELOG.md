@@ -2,6 +2,10 @@
 
 All notable changes to `property` will be documented in this file.
 
+## #v1.0.6 - 2024-07-18
+
+add getDefaultAnnualInterestRateFromBorrower
+
 ## #v1.05 - 2024-07-16
 
 add getDefaultAnnualInterestRate
