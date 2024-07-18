@@ -239,6 +239,6 @@ it('has default interest rate per market segment', function (array $params) {
             ->shouldReceive('getRegional')->andReturn($params['regional'])
             ->shouldReceive('getGrossMonthlyIncome')->andReturn(new Price(Money::of($params['gmi'], 'PHP')));
     });
-    expect($property->setTotalContractPrice(new Price(Money::of($params['tcp'], 'PHP')))->getDefaultAnnualInterestRate($borrower))
+    expect($property->setTotalContractPrice(new Price(Money::of($params['tcp'], 'PHP')))->getDefaultAnnualInterestRateFromBorrower($borrower))
         ->toBe($params['guess_interest_rate']);
 })->with('guess-interest-rates');

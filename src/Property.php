@@ -149,20 +149,25 @@ class Property
         return $this->disposableIncomeRequirementMultiplier ?: $this->getDefaultDisposableIncomeRequirementMultiplier();
     }
 
-    public function getDefaultAnnualInterestRate(BorrowerInterface $borrower): float
+    public function getDefaultAnnualInterestRateFromBorrower(BorrowerInterface $borrower): float
+    {
+        return $this->getDefaultAnnualInterestRate($this->getTotalContractPrice(), $borrower->getGrossMonthlyIncome(), $borrower->getRegional());
+    }
+
+    public function getDefaultAnnualInterestRate(Price $total_contract_price, Price $gross_monthly_income, bool $regional): float
     {
         return match (true) {
             $this->getMarketSegment() == MarketSegment::OPEN => 0.07,
             default => match (true) {
-                $this->getTotalContractPrice()->inclusive()->compareTo(750000) <= 0 => ($borrower->getRegional()
-                    ? ($borrower->getGrossMonthlyIncome()->inclusive()->compareTo(12000) <= 0 ? 0.030 : 0.0625)
-                    : ($borrower->getGrossMonthlyIncome()->inclusive()->compareTo(14500) <= 0 ? 0.030 : 0.0625)),
-                $this->getTotalContractPrice()->inclusive()->compareTo(800000) <= 0 => ($borrower->getRegional()
-                    ? ($borrower->getGrossMonthlyIncome()->inclusive()->compareTo(13000) <= 0 ? 0.030 : 0.0625)
-                    : ($borrower->getGrossMonthlyIncome()->inclusive()->compareTo(15500) <= 0 ? 0.030 : 0.0625)),
-                $this->getTotalContractPrice()->inclusive()->compareTo(850000) <= 0 => ($borrower->getRegional()
-                    ? ($borrower->getGrossMonthlyIncome()->inclusive()->compareTo(15000) <= 0 ? 0.030 : 0.0625)
-                    : ($borrower->getGrossMonthlyIncome()->inclusive()->compareTo(16500) <= 0 ? 0.030 : 0.0625)),
+                $total_contract_price->inclusive()->compareTo(750000) <= 0 => ($regional
+                    ? ($gross_monthly_income->inclusive()->compareTo(12000) <= 0 ? 0.030 : 0.0625)
+                    : ($gross_monthly_income->inclusive()->compareTo(14500) <= 0 ? 0.030 : 0.0625)),
+                $total_contract_price->inclusive()->compareTo(800000) <= 0 => ($regional
+                    ? ($gross_monthly_income->inclusive()->compareTo(13000) <= 0 ? 0.030 : 0.0625)
+                    : ($gross_monthly_income->inclusive()->compareTo(15500) <= 0 ? 0.030 : 0.0625)),
+                $total_contract_price->inclusive()->compareTo(850000) <= 0 => ($regional
+                    ? ($gross_monthly_income->inclusive()->compareTo(15000) <= 0 ? 0.030 : 0.0625)
+                    : ($gross_monthly_income->inclusive()->compareTo(16500) <= 0 ? 0.030 : 0.0625)),
                 default => 0.0625,
             }
         };
