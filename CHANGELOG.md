@@ -2,6 +2,10 @@
 
 All notable changes to `property` will be documented in this file.
 
+## #v1.0.7 - 2024-08-07
+
+accept Money or float in setters'
+
 ## #v1.0.6 - 2024-07-18
 
 add getDefaultAnnualInterestRateFromBorrower
