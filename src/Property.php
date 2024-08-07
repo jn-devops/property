@@ -38,8 +38,8 @@ class Property
     protected float $disposableIncomeRequirementMultiplier = 0.0;
 
     /**
-     * @param Price|Money|float $value
      * @return $this
+     *
      * @throws MaximumContractPriceBreached
      * @throws MinimumContractPriceBreached
      * @throws \Brick\Math\Exception\MathException
@@ -63,13 +63,12 @@ class Property
             throw new MaximumContractPriceBreached;
         } //TODO: Lester make some exceptions.
 
-        $this->total_contract_price  = $total_contract_price;
+        $this->total_contract_price = $total_contract_price;
 
         return $this;
     }
 
     /**
-     * @return Price
      * @throws \Brick\Math\Exception\NumberFormatException
      * @throws \Brick\Math\Exception\RoundingNecessaryException
      * @throws \Brick\Money\Exception\UnknownCurrencyException
@@ -79,10 +78,9 @@ class Property
         return $this->total_contract_price ?? new Price(Money::of(0, 'PHP'));
     }
 
-
     /**
-     * @param Price|Money|float $value
      * @return $this
+     *
      * @throws \Brick\Math\Exception\NumberFormatException
      * @throws \Brick\Math\Exception\RoundingNecessaryException
      * @throws \Brick\Money\Exception\UnknownCurrencyException
@@ -99,7 +97,6 @@ class Property
     }
 
     /**
-     * @return Price
      * @throws \Brick\Math\Exception\NumberFormatException
      * @throws \Brick\Math\Exception\RoundingNecessaryException
      * @throws \Brick\Money\Exception\UnknownCurrencyException
@@ -109,9 +106,6 @@ class Property
         return $this->appraised_value ?? new Price(Money::of(0, 'PHP'));
     }
 
-    /**
-     * @return MarketSegment
-     */
     public function getMarketSegment(): MarketSegment
     {
         return MarketSegment::fromPrice($this->total_contract_price);
@@ -142,16 +136,12 @@ class Property
         return $this;
     }
 
-    /**
-     * @return float
-     */
     public function getLoanableValueMultiplier(): float
     {
         return $this->loanableValueMultiplier ?: $this->getDefaultLoanableValueMultiplier();
     }
 
     /**
-     * @return Price
      * @throws \Brick\Math\Exception\NumberFormatException
      * @throws \Brick\Math\Exception\RoundingNecessaryException
      * @throws \Brick\Money\Exception\UnknownCurrencyException
@@ -194,17 +184,12 @@ class Property
         return $this;
     }
 
-    /**
-     * @return float
-     */
     public function getDisposableIncomeRequirementMultiplier(): float
     {
         return $this->disposableIncomeRequirementMultiplier ?: $this->getDefaultDisposableIncomeRequirementMultiplier();
     }
 
     /**
-     * @param BorrowerInterface $borrower
-     * @return float
      * @throws \Brick\Math\Exception\NumberFormatException
      * @throws \Brick\Math\Exception\RoundingNecessaryException
      * @throws \Brick\Money\Exception\UnknownCurrencyException
@@ -215,10 +200,6 @@ class Property
     }
 
     /**
-     * @param Price $total_contract_price
-     * @param Price $gross_monthly_income
-     * @param bool $regional
-     * @return float
      * @throws \Brick\Math\Exception\MathException
      * @throws \Brick\Money\Exception\MoneyMismatchException
      */

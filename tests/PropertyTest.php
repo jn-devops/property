@@ -243,7 +243,7 @@ it('has default interest rate per market segment', function (array $params) {
         ->toBe($params['guess_interest_rate']);
 })->with('guess-interest-rates');
 
-it('can also accept Money or float in setTotalContractPrice and setAppraisedValue', function (){
+it('can also accept Money or float in setTotalContractPrice and setAppraisedValue', function () {
     $property = new Property;
     $property->setTotalContractPrice(Money::of(750000, 'PHP'))->setAppraisedValue(Money::of(700000, 'PHP'));
     expect($property->getTotalContractPrice()->inclusive()->compareTo(750000))->toBe(0);
