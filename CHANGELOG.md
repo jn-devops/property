@@ -2,6 +2,10 @@
 
 All notable changes to `property` will be documented in this file.
 
+## #v1.0.8 - 2024-08-31
+
+fix styling
+
 ## #v1.0.7 - 2024-08-07
 
 accept Money or float in setters'
