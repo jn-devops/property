@@ -1,14 +1,14 @@
 <?php
 
-use Brick\Money\Money;
-use Homeful\Common\Interfaces\BorrowerInterface;
-use Homeful\Property\Data\PropertyData;
-use Homeful\Property\Enums\MarketSegment;
 use Homeful\Property\Exceptions\MaximumContractPriceBreached;
 use Homeful\Property\Exceptions\MinimumContractPriceBreached;
+use Homeful\Common\Interfaces\BorrowerInterface;
+use Homeful\Property\Enums\MarketSegment;
+use Homeful\Property\Data\PropertyData;
 use Homeful\Property\Property;
 use Mockery\MockInterface;
 use Whitecube\Price\Price;
+use Brick\Money\Money;
 
 it('has minimum price', function () {
     $property = new Property;

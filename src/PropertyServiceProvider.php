@@ -2,9 +2,9 @@
 
 namespace Homeful\Property;
 
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Homeful\Property\Commands\PropertyCommand;
 use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class PropertyServiceProvider extends PackageServiceProvider
 {
@@ -17,9 +17,7 @@ class PropertyServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('property')
-            ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_property_table')
+            ->hasConfigFile(['property'])
             ->hasCommand(PropertyCommand::class);
     }
 }

@@ -2,8 +2,8 @@
 
 namespace Homeful\Property\Tests;
 
-use Homeful\Property\PropertyServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Homeful\Property\PropertyServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
