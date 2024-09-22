@@ -10,16 +10,16 @@ enum MarketSegment
     case ECONOMIC;
     case SOCIALIZED;
 
-    public static function fromPrice(Price $total_contract_price, DevelopmentType $developmentType = DevelopmentType::HORIZONTAL): self
+    public static function fromPrice(Price $total_contract_price, DevelopmentType $developmentType = DevelopmentType::BP_957): self
     {
         return with($total_contract_price->base()->getAmount()->toFloat(), function ($value) use ($developmentType) {
             return match ($developmentType) {
-                DevelopmentType::HORIZONTAL => match (true) {
+                DevelopmentType::BP_957 => match (true) {
                     $value <= config('property.market.ceiling.horizontal.socialized') => MarketSegment::SOCIALIZED,
                     $value <= config('property.market.ceiling.horizontal.economic') => MarketSegment::ECONOMIC,
                     default => MarketSegment::OPEN
                 },
-                DevelopmentType::VERTICAL => match (true) {
+                DevelopmentType::BP_220 => match (true) {
                     $value <= config('property.market.ceiling.vertical.socialized') => MarketSegment::SOCIALIZED,
                     $value <= config('property.market.ceiling.vertical.economic') => MarketSegment::ECONOMIC,
                     default => MarketSegment::OPEN

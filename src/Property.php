@@ -2,18 +2,19 @@
 
 namespace Homeful\Property;
 
+use Homeful\Property\Enums\DevelopmentType;
+use Homeful\Property\Enums\ProjectType;
 use Homeful\Property\Exceptions\MaximumContractPriceBreached;
 use Homeful\Property\Exceptions\MinimumContractPriceBreached;
-use Homeful\Common\Interfaces\BorrowerInterface;
-use Homeful\Property\Classes\LoanableModifier;
-use Homeful\Property\Enums\DevelopmentType;
 use Homeful\Property\Enums\MarketSegment;
+use Homeful\Property\Traits\HasNumbers;
 use Whitecube\Price\Price;
 use Brick\Money\Money;
-use Exception;
 
 class Property
 {
+    use HasNumbers;
+
     /**
      * arbitrary floor price
      */
@@ -36,6 +37,11 @@ class Property
     protected float $loanableValueMultiplier = 0.0;
 
     protected float $disposableIncomeRequirementMultiplier = 0.0;
+
+    protected ProjectType $project_type;
+
+    protected DevelopmentType $development_type;
+
 
     /**
      * @return $this
@@ -111,114 +117,27 @@ class Property
         return MarketSegment::fromPrice($this->total_contract_price);
     }
 
-    /** LOANABLE VALUE */
-    public function getDefaultLoanableValueMultiplier(): float
+    public function setProjectType(ProjectType $type): self
     {
-        return $this->getMarketSegment()->defaultLoanableValueMultiplier();
-    }
-
-    /**
-     * @return $this
-     *
-     * @throws Exception
-     */
-    public function setLoanableValueMultiplier(float $value): self
-    {
-        if ($value <= 0.0) {
-            throw new Exception('loanable value multiplier must be greater than 0%');
-        }
-        if ($value > 1) {
-            throw new Exception('loanable value multiplier must be less than or equal to 100%');
-        }
-
-        $this->loanableValueMultiplier = $value;
+        $this->project_type = $type;
 
         return $this;
     }
 
-    public function getLoanableValueMultiplier(): float
+    public function getProjectType(): ProjectType
     {
-        return $this->loanableValueMultiplier ?: $this->getDefaultLoanableValueMultiplier();
+        return $this->project_type ?? ProjectType::SINGLE_DETACHED;
     }
 
-    /**
-     * @throws \Brick\Math\Exception\NumberFormatException
-     * @throws \Brick\Math\Exception\RoundingNecessaryException
-     * @throws \Brick\Money\Exception\UnknownCurrencyException
-     */
-    public function getLoanableValue(): Price
+    public function setDevelopmentType(DevelopmentType $type): self
     {
-        $appraised_value = $this->getAppraisedValue();
-        $total_contract_price = $this->getTotalContractPrice();
-        $price = new Price(($appraised_value->compareTo($total_contract_price) == -1)
-                                    ? $appraised_value->inclusive()
-                                    : $total_contract_price->inclusive()
-        );
-        $price->addModifier('loanable', LoanableModifier::class, $this);
-
-        return $price;
-    }
-
-    /** DISPOSABLE INCOME REQUIREMENT */
-    public function getDefaultDisposableIncomeRequirementMultiplier(): float
-    {
-        return $this->getMarketSegment()->defaultDisposableIncomeRequirementMultiplier();
-    }
-
-    /**
-     * @return $this
-     *
-     * @throws Exception
-     */
-    public function setDisposableIncomeRequirementMultiplier(float $value): self
-    {
-        if ($value < 0.25) {
-            throw new Exception('disposable income requirement multiplier must be greater than 25%');
-        }
-        if ($value > 1) {
-            throw new Exception('disposable income requirement multiplier must be less than 100%');
-        }
-
-        $this->disposableIncomeRequirementMultiplier = $value;
+        $this->development_type = $type;
 
         return $this;
     }
 
-    public function getDisposableIncomeRequirementMultiplier(): float
+    public function getDevelopmentType(): DevelopmentType
     {
-        return $this->disposableIncomeRequirementMultiplier ?: $this->getDefaultDisposableIncomeRequirementMultiplier();
-    }
-
-    /**
-     * @throws \Brick\Math\Exception\NumberFormatException
-     * @throws \Brick\Math\Exception\RoundingNecessaryException
-     * @throws \Brick\Money\Exception\UnknownCurrencyException
-     */
-    public function getDefaultAnnualInterestRateFromBorrower(BorrowerInterface $borrower): float
-    {
-        return $this->getDefaultAnnualInterestRate($this->getTotalContractPrice(), $borrower->getGrossMonthlyIncome(), $borrower->getRegional());
-    }
-
-    /**
-     * @throws \Brick\Math\Exception\MathException
-     * @throws \Brick\Money\Exception\MoneyMismatchException
-     */
-    public function getDefaultAnnualInterestRate(Price $total_contract_price, Price $gross_monthly_income, bool $regional): float
-    {
-        return match (true) {
-            $this->getMarketSegment() == MarketSegment::OPEN => 0.07,
-            default => match (true) {
-                $total_contract_price->inclusive()->compareTo(750000) <= 0 => ($regional
-                    ? ($gross_monthly_income->inclusive()->compareTo(12000) <= 0 ? 0.030 : 0.0625)
-                    : ($gross_monthly_income->inclusive()->compareTo(14500) <= 0 ? 0.030 : 0.0625)),
-                $total_contract_price->inclusive()->compareTo(800000) <= 0 => ($regional
-                    ? ($gross_monthly_income->inclusive()->compareTo(13000) <= 0 ? 0.030 : 0.0625)
-                    : ($gross_monthly_income->inclusive()->compareTo(15500) <= 0 ? 0.030 : 0.0625)),
-                $total_contract_price->inclusive()->compareTo(850000) <= 0 => ($regional
-                    ? ($gross_monthly_income->inclusive()->compareTo(15000) <= 0 ? 0.030 : 0.0625)
-                    : ($gross_monthly_income->inclusive()->compareTo(16500) <= 0 ? 0.030 : 0.0625)),
-                default => 0.0625,
-            }
-        };
+        return $this->development_type ?? DevelopmentType::BP_220;
     }
 }

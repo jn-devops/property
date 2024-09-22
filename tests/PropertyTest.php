@@ -1,9 +1,9 @@
 <?php
 
+use Homeful\Property\Enums\{DevelopmentType, MarketSegment, ProjectType};
 use Homeful\Property\Exceptions\MaximumContractPriceBreached;
 use Homeful\Property\Exceptions\MinimumContractPriceBreached;
 use Homeful\Common\Interfaces\BorrowerInterface;
-use Homeful\Property\Enums\MarketSegment;
 use Homeful\Property\Data\PropertyData;
 use Homeful\Property\Property;
 use Mockery\MockInterface;
@@ -27,6 +27,30 @@ it('has market segments', function () {
     expect(MarketSegment::ECONOMIC->getName())->toBe('economic');
     expect(MarketSegment::SOCIALIZED->getName())->toBe(config('property.market.segment.socialized'));
     expect(MarketSegment::SOCIALIZED->getName())->toBe('socialized');
+});
+
+it('has project types', function () {
+    $property = new Property;
+    expect($property->getProjectType())->toBe(ProjectType::SINGLE_DETACHED);
+    $property->setProjectType(ProjectType::CONDOMINIUM);
+    expect($property->getProjectType())->toBe(ProjectType::CONDOMINIUM);
+    $property->setProjectType(ProjectType::DUPLEX);
+    expect($property->getProjectType())->toBe(ProjectType::DUPLEX);
+    $property->setProjectType(ProjectType::ROW_HOUSE);
+    expect($property->getProjectType())->toBe(ProjectType::ROW_HOUSE);
+    $property->setProjectType(ProjectType::SINGLE_ATTACHED);
+    expect($property->getProjectType())->toBe(ProjectType::SINGLE_ATTACHED);
+    $property->setProjectType(ProjectType::QUADRUPLEX);
+    expect($property->getProjectType())->toBe(ProjectType::QUADRUPLEX);
+});
+
+it('has development types', function () {
+    $property = new Property;
+    expect($property->getDevelopmentType())->toBe(DevelopmentType::BP_220);
+    $property->setDevelopmentType(DevelopmentType::BP_957);
+    expect($property->getDevelopmentType())->toBe(DevelopmentType::BP_957);
+    $property->setDevelopmentType(DevelopmentType::BP_220);
+    expect($property->getDevelopmentType())->toBe(DevelopmentType::BP_220);
 });
 
 it('can get market segment from tcp', function () {
