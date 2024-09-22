@@ -2,6 +2,10 @@
 
 All notable changes to `property` will be documented in this file.
 
+## #v1.0.9 - 2024-09-22
+
+add development typ and, project type'
+
 ## #v1.0.8 - 2024-08-31
 
 fix styling
