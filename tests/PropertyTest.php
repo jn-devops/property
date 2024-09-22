@@ -1,6 +1,6 @@
 <?php
 
-use Homeful\Property\Enums\{DevelopmentType, MarketSegment, ProjectType};
+use Homeful\Property\Enums\{DevelopmentType, MarketSegment, HousingType};
 use Homeful\Property\Exceptions\MaximumContractPriceBreached;
 use Homeful\Property\Exceptions\MinimumContractPriceBreached;
 use Homeful\Common\Interfaces\BorrowerInterface;
@@ -29,19 +29,21 @@ it('has market segments', function () {
     expect(MarketSegment::SOCIALIZED->getName())->toBe('socialized');
 });
 
-it('has project types', function () {
+it('has housing types', function () {
     $property = new Property;
-    expect($property->getProjectType())->toBe(ProjectType::SINGLE_DETACHED);
-    $property->setProjectType(ProjectType::CONDOMINIUM);
-    expect($property->getProjectType())->toBe(ProjectType::CONDOMINIUM);
-    $property->setProjectType(ProjectType::DUPLEX);
-    expect($property->getProjectType())->toBe(ProjectType::DUPLEX);
-    $property->setProjectType(ProjectType::ROW_HOUSE);
-    expect($property->getProjectType())->toBe(ProjectType::ROW_HOUSE);
-    $property->setProjectType(ProjectType::SINGLE_ATTACHED);
-    expect($property->getProjectType())->toBe(ProjectType::SINGLE_ATTACHED);
-    $property->setProjectType(ProjectType::QUADRUPLEX);
-    expect($property->getProjectType())->toBe(ProjectType::QUADRUPLEX);
+    expect($property->getHousingType())->toBe(HousingType::SINGLE_DETACHED);
+    $property->setHousingType(HousingType::CONDOMINIUM);
+    expect($property->getHousingType())->toBe(HousingType::CONDOMINIUM);
+    $property->setHousingType(HousingType::DUPLEX);
+    expect($property->getHousingType())->toBe(HousingType::DUPLEX);
+    $property->setHousingType(HousingType::ROW_HOUSE);
+    expect($property->getHousingType())->toBe(HousingType::ROW_HOUSE);
+    $property->setHousingType(HousingType::SINGLE_ATTACHED);
+    expect($property->getHousingType())->toBe(HousingType::SINGLE_ATTACHED);
+    $property->setHousingType(HousingType::QUADRUPLEX);
+    expect($property->getHousingType())->toBe(HousingType::QUADRUPLEX);
+    $property->setHousingType(HousingType::SINGLE_DETACHED);
+    expect($property->getHousingType())->toBe(HousingType::SINGLE_DETACHED);
 });
 
 it('has development types', function () {

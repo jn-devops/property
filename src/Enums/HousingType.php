@@ -2,7 +2,7 @@
 
 namespace Homeful\Property\Enums;
 
-enum ProjectType
+enum HousingType
 {
     case CONDOMINIUM;
     case DUPLEX;

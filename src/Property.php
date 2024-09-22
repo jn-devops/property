@@ -2,11 +2,11 @@
 
 namespace Homeful\Property;
 
-use Homeful\Property\Enums\DevelopmentType;
-use Homeful\Property\Enums\ProjectType;
 use Homeful\Property\Exceptions\MaximumContractPriceBreached;
 use Homeful\Property\Exceptions\MinimumContractPriceBreached;
+use Homeful\Property\Enums\DevelopmentType;
 use Homeful\Property\Enums\MarketSegment;
+use Homeful\Property\Enums\HousingType;
 use Homeful\Property\Traits\HasNumbers;
 use Whitecube\Price\Price;
 use Brick\Money\Money;
@@ -38,7 +38,7 @@ class Property
 
     protected float $disposableIncomeRequirementMultiplier = 0.0;
 
-    protected ProjectType $project_type;
+    protected HousingType $housing_type;
 
     protected DevelopmentType $development_type;
 
@@ -117,16 +117,16 @@ class Property
         return MarketSegment::fromPrice($this->total_contract_price);
     }
 
-    public function setProjectType(ProjectType $type): self
+    public function setHousingType(HousingType $type): self
     {
-        $this->project_type = $type;
+        $this->housing_type = $type;
 
         return $this;
     }
 
-    public function getProjectType(): ProjectType
+    public function getHousingType(): HousingType
     {
-        return $this->project_type ?? ProjectType::SINGLE_DETACHED;
+        return $this->housing_type ?? HousingType::SINGLE_DETACHED;
     }
 
     public function setDevelopmentType(DevelopmentType $type): self
