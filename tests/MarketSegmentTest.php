@@ -4,7 +4,7 @@ use Homeful\Property\Enums\DevelopmentType;
 use Homeful\Property\Enums\MarketSegment;
 use Whitecube\Price\Price;
 
-it('can be derived from price and development type', function () {
+test('market segment can be derived from price and development type', function () {
     expect(MarketSegment::fromPrice(Price::of(849999, 'PHP')))->toBe(MarketSegment::SOCIALIZED);
     expect(MarketSegment::fromPrice(Price::of(850000, 'PHP')))->toBe(MarketSegment::SOCIALIZED);
     expect(MarketSegment::fromPrice(Price::of(900000, 'PHP')))->toBe(MarketSegment::ECONOMIC);
@@ -38,4 +38,8 @@ it('can be derived from price and development type', function () {
     expect(MarketSegment::fromPrice(Price::PHP(249999900), DevelopmentType::BP_957))->toBe(MarketSegment::ECONOMIC);
     expect(MarketSegment::fromPrice(Price::PHP(250000000), DevelopmentType::BP_957))->toBe(MarketSegment::ECONOMIC);
     expect(MarketSegment::fromPrice(Price::PHP(250000100), DevelopmentType::BP_957))->toBe(MarketSegment::OPEN);
+});
+
+test('market segment has a default', function() {
+    expect(MarketSegment::default())->toBe(MarketSegment::SOCIALIZED);
 });

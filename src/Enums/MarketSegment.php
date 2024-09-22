@@ -54,4 +54,9 @@ enum MarketSegment
             self::SOCIALIZED => config('property.market.loanable-value-multiplier.socialized', 1.00), //100%
         };
     }
+
+    public static function default(): self
+    {
+        return MarketSegment::SOCIALIZED;
+    }
 }
