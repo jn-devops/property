@@ -4,7 +4,10 @@ use Homeful\Property\Enums\{DevelopmentType, MarketSegment, HousingType};
 use Homeful\Property\Exceptions\MaximumContractPriceBreached;
 use Homeful\Property\Exceptions\MinimumContractPriceBreached;
 use Homeful\Common\Interfaces\BorrowerInterface;
+use Homeful\Common\Classes\{Assert, Input};
 use Homeful\Property\Data\PropertyData;
+use Homeful\Common\Enums\WorkArea;
+use Homeful\Common\Classes\Amount;
 use Homeful\Property\Property;
 use Mockery\MockInterface;
 use Whitecube\Price\Price;
@@ -278,3 +281,56 @@ it('can also accept Money or float in setTotalContractPrice and setAppraisedValu
     expect($property->getTotalContractPrice()->inclusive()->compareTo(1200000))->toBe(0);
     expect($property->getAppraisedValue()->inclusive()->compareTo(1000000))->toBe(0);
 });
+
+/* SIMULATIONS */
+
+dataset('market segment simulation', function () {
+    return [
+        fn() => [Input::TCP => 750000, Assert::MARKET_SEGMENT => MarketSegment::SOCIALIZED],
+        fn() => [Input::TCP => 849999, Assert::MARKET_SEGMENT => MarketSegment::SOCIALIZED],
+        fn() => [Input::TCP => 850000, Assert::MARKET_SEGMENT => MarketSegment::SOCIALIZED],
+        fn() => [Input::TCP => 850001, Assert::MARKET_SEGMENT => MarketSegment::ECONOMIC],
+        fn() => [Input::TCP => 2499999, Assert::MARKET_SEGMENT => MarketSegment::ECONOMIC],
+        fn() => [Input::TCP => 2500000, Assert::MARKET_SEGMENT => MarketSegment::ECONOMIC],
+        fn() => [Input::TCP => 2500001, Assert::MARKET_SEGMENT => MarketSegment::OPEN],
+    ];
+});
+
+it('can derive market segment from tcp', function (array $params) {
+    $property = new Property;
+    expect($property->setTotalContractPrice($params[Input::TCP])->getMarketSegment())->toBe($params[Assert::MARKET_SEGMENT]);
+})->with('market segment simulation');
+
+dataset('price ceiling simulation', function () {
+    return [
+        fn() => [Input::MARKET_SEGMENT => MarketSegment::OPEN, Assert::PRICE_CEILING => 10000000],
+        fn() => [Input::MARKET_SEGMENT => MarketSegment::ECONOMIC, Assert::PRICE_CEILING => 2500000],
+        fn() => [Input::MARKET_SEGMENT => MarketSegment::SOCIALIZED, Input::WORK_AREA => WorkArea::HUC, Assert::PRICE_CEILING => 850000],
+        fn() => [Input::MARKET_SEGMENT => MarketSegment::SOCIALIZED, Input::WORK_AREA => WorkArea::REGION, Assert::PRICE_CEILING => 750000],
+        fn() => [Input::HOUSING_TYPE => HousingType::CONDOMINIUM, Input::STOREYS => 4, Input::FLOOR_AREA => 22.0, Assert::PRICE_CEILING => 933320],
+        fn() => [Input::HOUSING_TYPE => HousingType::CONDOMINIUM, Input::STOREYS => 4, Input::FLOOR_AREA => 25.0, Assert::PRICE_CEILING => 1060591],
+        fn() => [Input::HOUSING_TYPE => HousingType::CONDOMINIUM, Input::STOREYS => 4, Input::FLOOR_AREA => 25.1, Assert::PRICE_CEILING => 1145438],
+        fn() => [Input::HOUSING_TYPE => HousingType::CONDOMINIUM, Input::STOREYS => 9, Input::FLOOR_AREA => 22.0, Assert::PRICE_CEILING => 1000000],
+        fn() => [Input::HOUSING_TYPE => HousingType::CONDOMINIUM, Input::STOREYS => 9, Input::FLOOR_AREA => 25.0, Assert::PRICE_CEILING => 1136364],
+        fn() => [Input::HOUSING_TYPE => HousingType::CONDOMINIUM, Input::STOREYS => 9, Input::FLOOR_AREA => 25.1, Assert::PRICE_CEILING => 1227273],
+        fn() => [Input::HOUSING_TYPE => HousingType::CONDOMINIUM, Input::STOREYS => 10, Input::FLOOR_AREA => 22.0, Assert::PRICE_CEILING => 1320000],
+        fn() => [Input::HOUSING_TYPE => HousingType::CONDOMINIUM, Input::STOREYS => 10, Input::FLOOR_AREA => 25.0, Assert::PRICE_CEILING => 1500000],
+        fn() => [Input::HOUSING_TYPE => HousingType::CONDOMINIUM, Input::STOREYS => 10, Input::FLOOR_AREA => 25.1, Assert::PRICE_CEILING => 1620000],
+    ];
+});
+
+it('can derive price ceiling', function (array $params) {
+    $property = new Property;
+    if (isset($params[Input::MARKET_SEGMENT]))
+    $property->setMarketSegment($params[Input::MARKET_SEGMENT]);
+    if (isset($params[Input::WORK_AREA]))
+        $property->setWorkArea($params[Input::WORK_AREA]);
+    if (isset($params[Input::HOUSING_TYPE]))
+        $property->setHousingType($params[Input::HOUSING_TYPE]);
+    if (isset($params[Input::STOREYS]))
+        $property->setStoreys($params[Input::STOREYS]);
+    if (isset($params[Input::FLOOR_AREA]))
+        $property->setFloorArea($params[Input::FLOOR_AREA]);
+    expect($property->getPriceCeiling()->inclusive()->compareTo($params[Assert::PRICE_CEILING]))->toBe(Amount::EQUAL);
+
+})->with('price ceiling simulation');

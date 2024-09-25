@@ -2,18 +2,71 @@
 
 namespace Homeful\Property;
 
-use Homeful\Property\Exceptions\MaximumContractPriceBreached;
-use Homeful\Property\Exceptions\MinimumContractPriceBreached;
+use Homeful\Common\Enums\WorkArea;
+use Homeful\Common\Interfaces\BorrowerInterface;
+use Homeful\Property\Traits\HasCalculations;
 use Homeful\Property\Enums\DevelopmentType;
+use Homeful\Property\Traits\HasProperties;
 use Homeful\Property\Enums\MarketSegment;
 use Homeful\Property\Enums\HousingType;
-use Homeful\Property\Traits\HasNumbers;
 use Whitecube\Price\Price;
 use Brick\Money\Money;
 
+/**
+ * Class Property
+ *
+ * @property Price $total_contract_price
+ * @property Price $appraised_value
+ * @property DevelopmentType $development_type
+ * @property HousingType $housing_type
+ * @property WorkArea $work_area
+ * @property float $floor_area
+ * @property int $storeys
+ * @method Property setMarketSegment(MarketSegment $market_segment)
+ * @method MarketSegment getMarketSegment()
+ * @method Property setWorkArea(WorkArea $work_area)
+ * @method WorkArea getWorkArea()
+ * @method Property setTotalContractPrice(Price|Money|float $value)
+ * @method Price getTotalContractPrice()
+ * @method Property setAppraisedValue(Price|Money|float $value)
+ * @method Price getAppraisedValue()
+ * @method Property setDevelopmentType(DevelopmentType $type)
+ * @method DevelopmentType getDevelopmentType()
+ * @method Property setHousingType(HousingType $type)
+ * @method HousingType getHousingType()
+ * @method Property setFloorArea(float $value)
+ * @method float getFloorArea()
+ * @method Property setStoreys(int $value)
+ * @method int getStoreys()
+ *
+ * @property float $loanable_value_multiplier
+ * @method float getDefaultLoanableValueMultiplier()
+ * @method Property setLoanableValueMultiplier(float $value)
+ * @method float getLoanableValueMultiplier()
+ * @method Price getLoanableValue()
+ * @method float getDefaultDisposableIncomeRequirementMultiplier()
+ * @method Property setDisposableIncomeRequirementMultiplier(float $value)
+ * @method float getDisposableIncomeRequirementMultiplier()
+ * @method float getDefaultAnnualInterestRateFromBorrower(BorrowerInterface $borrower)
+ * @method float getDefaultAnnualInterestRate(Price $total_contract_price, Price $gross_monthly_income, bool $regional)
+ * @method Price getPriceCeiling()
+ */
+
 class Property
 {
-    use HasNumbers;
+    use HasProperties;
+    use HasCalculations;
+
+    protected MarketSegment $market_segment;
+    protected Price $total_contract_price;
+    protected Price $appraised_value;
+    protected DevelopmentType $development_type;
+    protected HousingType $housing_type;
+    protected float $loanable_value_multiplier = 0.0;
+    protected float $disposableIncomeRequirementMultiplier = 0.0;
+    protected WorkArea $work_area;
+    protected float $floor_area;
+    protected int $storeys;
 
     /**
      * arbitrary floor price
@@ -25,119 +78,8 @@ class Property
      */
     const MAXIMUM_CONTRACT_PRICE = 5000000; //₱5M
 
-    //    /**
-    //     * @var DevelopmentType
-    //     */
-    //    protected DevelopmentType $developmentType = DevelopmentType::HORIZONTAL;
-
-    protected Price $total_contract_price;
-
-    protected Price $appraised_value;
-
-    protected float $loanableValueMultiplier = 0.0;
-
-    protected float $disposableIncomeRequirementMultiplier = 0.0;
-
-    protected HousingType $housing_type;
-
-    protected DevelopmentType $development_type;
-
-
-    /**
-     * @return $this
-     *
-     * @throws MaximumContractPriceBreached
-     * @throws MinimumContractPriceBreached
-     * @throws \Brick\Math\Exception\MathException
-     * @throws \Brick\Math\Exception\NumberFormatException
-     * @throws \Brick\Math\Exception\RoundingNecessaryException
-     * @throws \Brick\Money\Exception\MoneyMismatchException
-     * @throws \Brick\Money\Exception\UnknownCurrencyException
-     */
-    public function setTotalContractPrice(Price|Money|float $value): self
-    {
-        $total_contract_price = $value instanceof Price
-            ? $value
-            : new Price(($value instanceof Money)
-                ? $value
-                : Money::of($value, 'PHP'));
-
-        if ($total_contract_price->inclusive()->compareTo(self::MINIMUM_CONTRACT_PRICE) == -1) {
-            throw new MinimumContractPriceBreached;
-        }
-        if ($total_contract_price->inclusive()->compareTo(self::MAXIMUM_CONTRACT_PRICE) == 1) {
-            throw new MaximumContractPriceBreached;
-        } //TODO: Lester make some exceptions.
-
-        $this->total_contract_price = $total_contract_price;
-
-        return $this;
-    }
-
-    /**
-     * @throws \Brick\Math\Exception\NumberFormatException
-     * @throws \Brick\Math\Exception\RoundingNecessaryException
-     * @throws \Brick\Money\Exception\UnknownCurrencyException
-     */
-    public function getTotalContractPrice(): Price
-    {
-        return $this->total_contract_price ?? new Price(Money::of(0, 'PHP'));
-    }
-
-    /**
-     * @return $this
-     *
-     * @throws \Brick\Math\Exception\NumberFormatException
-     * @throws \Brick\Math\Exception\RoundingNecessaryException
-     * @throws \Brick\Money\Exception\UnknownCurrencyException
-     */
-    public function setAppraisedValue(Price|Money|float $value): self
-    {
-        $this->appraised_value = $value instanceof Price
-            ? $value
-            : new Price(($value instanceof Money)
-                ? $value
-                : Money::of($value, 'PHP'));
-
-        return $this;
-    }
-
-    /**
-     * @throws \Brick\Math\Exception\NumberFormatException
-     * @throws \Brick\Math\Exception\RoundingNecessaryException
-     * @throws \Brick\Money\Exception\UnknownCurrencyException
-     */
-    public function getAppraisedValue(): Price
-    {
-        return $this->appraised_value ?? new Price(Money::of(0, 'PHP'));
-    }
-
-    public function getMarketSegment(): MarketSegment
-    {
-        return MarketSegment::fromPrice($this->total_contract_price);
-    }
-
-    public function setHousingType(HousingType $type): self
-    {
-        $this->housing_type = $type;
-
-        return $this;
-    }
-
-    public function getHousingType(): HousingType
-    {
-        return $this->housing_type ?? HousingType::SINGLE_DETACHED;
-    }
-
-    public function setDevelopmentType(DevelopmentType $type): self
-    {
-        $this->development_type = $type;
-
-        return $this;
-    }
-
-    public function getDevelopmentType(): DevelopmentType
-    {
-        return $this->development_type ?? DevelopmentType::BP_220;
-    }
+//    public function getMarketSegment(): MarketSegment
+//    {
+//        return MarketSegment::fromPrice($this->total_contract_price);
+//    }
 }

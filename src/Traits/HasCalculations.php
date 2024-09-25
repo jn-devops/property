@@ -5,18 +5,29 @@ namespace Homeful\Property\Traits;
 use Homeful\Common\Interfaces\BorrowerInterface;
 use Homeful\Property\Classes\LoanableModifier;
 use Homeful\Property\Enums\MarketSegment;
+use Homeful\Property\Enums\HousingType;
+use Homeful\Common\Classes\Amount;
+use Homeful\Common\Enums\WorkArea;
+use Homeful\Property\Property;
 use Whitecube\Price\Price;
+use Brick\Money\Money;
+use Exception;
 
-trait HasNumbers
+trait HasCalculations
 {
     /** LOANABLE VALUE */
+
+    /**
+     * @return float
+     */
     public function getDefaultLoanableValueMultiplier(): float
     {
         return $this->getMarketSegment()->defaultLoanableValueMultiplier();
     }
 
     /**
-     * @return $this
+     * @param float $value
+     * @return Property|HasCalculations
      *
      * @throws Exception
      */
@@ -29,14 +40,17 @@ trait HasNumbers
             throw new Exception('loanable value multiplier must be less than or equal to 100%');
         }
 
-        $this->loanableValueMultiplier = $value;
+        $this->loanable_value_multiplier = $value;
 
         return $this;
     }
 
+    /**
+     * @return float
+     */
     public function getLoanableValueMultiplier(): float
     {
-        return $this->loanableValueMultiplier ?: $this->getDefaultLoanableValueMultiplier();
+        return $this->loanable_value_multiplier ?: $this->getDefaultLoanableValueMultiplier();
     }
 
     /**
@@ -48,7 +62,7 @@ trait HasNumbers
     {
         $appraised_value = $this->getAppraisedValue();
         $total_contract_price = $this->getTotalContractPrice();
-        $price = new Price(($appraised_value->compareTo($total_contract_price) == -1)
+        $price = new Price(($appraised_value->compareTo($total_contract_price) == Amount::LESS_THAN)
             ? $appraised_value->inclusive()
             : $total_contract_price->inclusive()
         );
@@ -58,6 +72,10 @@ trait HasNumbers
     }
 
     /** DISPOSABLE INCOME REQUIREMENT */
+
+    /**
+     * @return float
+     */
     public function getDefaultDisposableIncomeRequirementMultiplier(): float
     {
         return $this->getMarketSegment()->defaultDisposableIncomeRequirementMultiplier();
@@ -82,6 +100,9 @@ trait HasNumbers
         return $this;
     }
 
+    /**
+     * @return float
+     */
     public function getDisposableIncomeRequirementMultiplier(): float
     {
         return $this->disposableIncomeRequirementMultiplier ?: $this->getDefaultDisposableIncomeRequirementMultiplier();
@@ -101,7 +122,7 @@ trait HasNumbers
      * @throws \Brick\Math\Exception\MathException
      * @throws \Brick\Money\Exception\MoneyMismatchException
      */
-    public function getDefaultAnnualInterestRate(Price $total_contract_price, Price $gross_monthly_income, bool $regional): float
+    protected function getDefaultAnnualInterestRate(Price $total_contract_price, Price $gross_monthly_income, bool $regional): float
     {
         return match (true) {
             $this->getMarketSegment() == MarketSegment::OPEN => 0.07,
@@ -118,5 +139,50 @@ trait HasNumbers
                 default => 0.0625,
             }
         };
+    }
+
+    /**
+     * @return Price
+     * @throws \Brick\Math\Exception\NumberFormatException
+     * @throws \Brick\Math\Exception\RoundingNecessaryException
+     * @throws \Brick\Money\Exception\UnknownCurrencyException
+     */
+    public function getPriceCeiling(): Price
+    {
+        $floor_area = $this->getFloorArea();
+        $storeys = $this->getStoreys();
+        $value = match ($this->getHousingType()) {
+            HousingType::CONDOMINIUM => match (true) {
+                $storeys == 0 => throw new Exception('storeys can not be zero'),
+                $storeys <= 4 => match(true) {
+                    $floor_area == 0.0 => throw new Exception('floor area can not be zero'),
+                    $floor_area <= 22.0 => 933320.0,
+                    $floor_area <= 25.0 => 1060591.0,
+                    default => 1145438.0
+                },
+                $storeys <= 9 => match(true) {
+                    $floor_area == 0.0 => throw new Exception('floor area can not be zero'),
+                    $floor_area <= 22.0 => 1000000.0,
+                    $floor_area <= 25.0 => 1136364.0,
+                    default => 1227273.0
+                },
+                default => match(true) {
+                    $floor_area == 0.0 => throw new Exception('floor area can not be zero'),
+                    $floor_area <= 22.0 => 1320000.0,
+                    $floor_area <= 25.0 => 1500000.0,
+                    default => 1620000.0
+                },
+            },
+            default => match ($this->getMarketSegment()) {
+                MarketSegment::SOCIALIZED => match($this->getWorkArea()) {
+                    WorkArea::HUC => 850000,
+                    WorkArea::REGION => 750000
+                },
+                MarketSegment::ECONOMIC => 2500000,
+                MarketSegment::OPEN => 10000000
+            }
+        };
+
+        return new Price(Money::of($value, 'PHP'));
     }
 }

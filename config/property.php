@@ -1,5 +1,9 @@
 <?php
 
+use Homeful\Property\Enums\DevelopmentType;
+use Homeful\Property\Enums\MarketSegment;
+use Homeful\Property\Enums\HousingType;
+
 return [
     'market' => [
         'segment' => [
@@ -9,12 +13,24 @@ return [
         ],
         'ceiling' => [
             'horizontal' => [
+                'open' => env('HORIZONTAL_OPEN_MARKET_CEILING', 10000000),
                 'economic' => env('HORIZONTAL_ECONOMIC_MARKET_CEILING', 2500000),
                 'socialized' => env('HORIZONTAL_SOCIALIZED_MARKET_CEILING', 850000),
             ],
             'vertical' => [
+                'open' => env('VERTICAL_OPEN_MARKET_CEILING', 10000000),
                 'economic' => env('VERTICAL_ECONOMIC_MARKET_CEILING', 2500000),
                 'socialized' => env('VERTICAL_SOCIALIZED_MARKET_CEILING', 1800000),
+            ],
+            'bp_957' => [
+                'open' => env('BP957_OPEN_MARKET_CEILING', 6000000),
+                'economic' => env('BP957_ECONOMIC_MARKET_CEILING', 2500000),
+                'socialized' => env('BP957_SOCIALIZED_MARKET_CEILING', 1800000),
+            ],
+            'bp_220' => [
+                'open' => env('BP220_OPEN_MARKET_CEILING', 10000000),
+                'economic' => env('BP220_ECONOMIC_MARKET_CEILING', 2500000),
+                'socialized' => env('BP220_SOCIALIZED_MARKET_CEILING', 1800000),
             ],
         ],
         'disposable-income-requirement-multiplier' => [
@@ -28,4 +44,331 @@ return [
             'socialized' => env('SOCIALIZED_MARKET_LOANABLE_MULTIPLIER', 1.00),
         ],
     ],
+
+    'price_ceiling' => [
+        'hdmf' => [
+            '403_349' => [
+                'CTS' => [
+                    'socialized' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ],
+                    'economic' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ],
+                    'open' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ]
+                ],
+                'CTS-EL' => [
+                    'socialized' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ],
+                    'economic' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ],
+                    'open' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ]
+                ],
+                'DCS' => [
+                    'socialized' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ],
+                    'economic' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ],
+                    'open' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ]
+                ],
+                'DCS-EL' => [
+                    'socialized' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ],
+                    'economic' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ],
+                    'open' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ]
+                ],
+                'REM' => [
+                    'socialized' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ],
+                    'economic' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ],
+                    'open' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ]
+                ],
+                'REM-EL' => [
+                    'socialized' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ],
+                    'economic' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ],
+                    'open' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ]
+                ],
+            ],
+            '396_349' => [
+                'CTS' => [
+                    'socialized' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ],
+                    'economic' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ],
+                    'open' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ]
+                ],
+                'CTS-EL' => [
+                    'socialized' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ],
+                    'economic' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ],
+                    'open' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ]
+                ],
+                'DCS' => [
+                    'socialized' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ],
+                    'economic' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ],
+                    'open' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ]
+                ],
+                'DCS-EL' => [
+                    'socialized' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ],
+                    'economic' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ],
+                    'open' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ]
+                ],
+                'REM' => [
+                    'socialized' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ],
+                    'economic' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ],
+                    'open' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ]
+                ],
+                'REM-EL' => [
+                    'socialized' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ],
+                    'economic' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ],
+                    'open' => [
+                        'condominium' => [],
+                        'duplex' => [],
+                        'row_house' => [],
+                        'single_attached' => [],
+                        'single_detached' => [],
+                        'quadruplex' => [],
+                    ]
+                ],
+            ],
+        ],
+        'rcbc' => [
+
+        ],
+        'cbc' => [
+
+        ],
+    ]
 ];
