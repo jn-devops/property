@@ -2,6 +2,10 @@
 
 All notable changes to `property` will be documented in this file.
 
+## #v1.1.3 - 2024-09-26
+
+update data
+
 ## #v1.1.2 - 2024-09-25
 
 refactor, add getPriceCeiling function
