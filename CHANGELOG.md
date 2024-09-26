@@ -2,6 +2,10 @@
 
 All notable changes to `property` will be documented in this file.
 
+## #v1.1.5 - 2024-09-26
+
+add appraisal
+
 ## #v1.1.4 - 2024-09-26
 
 add fees, fee structure and selling price
