@@ -2,6 +2,10 @@
 
 All notable changes to `property` will be documented in this file.
 
+## #v1.1.4 - 2024-09-26
+
+add fees, fee structure and selling price
+
 ## #v1.1.3 - 2024-09-26
 
 update data
