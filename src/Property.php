@@ -2,13 +2,15 @@
 
 namespace Homeful\Property;
 
-use Homeful\Common\Enums\WorkArea;
 use Homeful\Common\Interfaces\BorrowerInterface;
+use Homeful\Property\Enums\Charge;
 use Homeful\Property\Traits\HasCalculations;
 use Homeful\Property\Enums\DevelopmentType;
 use Homeful\Property\Traits\HasProperties;
 use Homeful\Property\Enums\MarketSegment;
 use Homeful\Property\Enums\HousingType;
+use Illuminate\Support\Collection;
+use Homeful\Common\Enums\WorkArea;
 use Whitecube\Price\Price;
 use Brick\Money\Money;
 
@@ -22,6 +24,8 @@ use Brick\Money\Money;
  * @property WorkArea $work_area
  * @property float $floor_area
  * @property int $storeys
+ * @property Collection $charges
+ *
  * @method Property setMarketSegment(MarketSegment $market_segment)
  * @method MarketSegment getMarketSegment()
  * @method Property setWorkArea(WorkArea $work_area)
@@ -38,6 +42,9 @@ use Brick\Money\Money;
  * @method float getFloorArea()
  * @method Property setStoreys(int $value)
  * @method int getStoreys()
+ * @method Property addCharge(Charge $charge)
+ * @method Collection getCharges()
+ * @method Price getFees()
  *
  * @property float $loanable_value_multiplier
  * @method float getDefaultLoanableValueMultiplier()
@@ -50,6 +57,7 @@ use Brick\Money\Money;
  * @method float getDefaultAnnualInterestRateFromBorrower(BorrowerInterface $borrower)
  * @method float getDefaultAnnualInterestRate(Price $total_contract_price, Price $gross_monthly_income, bool $regional)
  * @method Price getPriceCeiling()
+ *
  */
 
 class Property
@@ -67,6 +75,7 @@ class Property
     protected WorkArea $work_area;
     protected float $floor_area;
     protected int $storeys;
+    protected Collection $charges;
 
     /**
      * arbitrary floor price
@@ -78,8 +87,8 @@ class Property
      */
     const MAXIMUM_CONTRACT_PRICE = 5000000; //₱5M
 
-//    public function getMarketSegment(): MarketSegment
-//    {
-//        return MarketSegment::fromPrice($this->total_contract_price);
-//    }
+    public function __construct()
+    {
+        $this->charges = new Collection;
+    }
 }

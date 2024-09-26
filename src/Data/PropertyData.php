@@ -5,6 +5,7 @@ namespace Homeful\Property\Data;
 use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Money\Exception\UnknownCurrencyException;
 use Brick\Math\Exception\NumberFormatException;
+use Homeful\Property\Enums\Charge;
 use Homeful\Property\Property;
 use Spatie\LaravelData\Data;
 
@@ -24,7 +25,10 @@ class PropertyData extends Data
         public string $housing_type,
         public int $storeys,
         public float $floor_area,
-        public float $price_ceiling
+        public float $price_ceiling,
+        public float $fees,
+        public string $fee_structure,
+        public float $selling_price
     ) {}
 
     /**
@@ -34,6 +38,11 @@ class PropertyData extends Data
      */
     public static function fromObject(Property $property): self
     {
+        $fee_structure = [];
+        $property->getCharges()->each(function(Charge $charge) use (&$fee_structure) {
+            $fee_structure[$charge->getName()] = $charge->getPrice()->inclusive()->getAmount()->toFloat();
+        });
+
         return new self(
             market_segment: $property->getMarketSegment()->getName(),
             total_contract_price: $property->getTotalContractPrice()->inclusive()->getAmount()->toFloat(),
@@ -48,7 +57,10 @@ class PropertyData extends Data
             housing_type: $property->getHousingType()->getName(),
             storeys: $property->getStoreys(),
             floor_area: $property->getFloorArea(),
-            price_ceiling: $property->getPriceCeiling()->inclusive()->getAmount()->toFloat()
+            price_ceiling: $property->getPriceCeiling()->inclusive()->getAmount()->toFloat(),
+            fees: $property->getFees()->inclusive()->getAmount()->toFloat(),
+            fee_structure: json_encode($fee_structure),
+            selling_price: $property->getSellingPrice()->inclusive()->getAmount()->toFloat()
         );
     }
 }

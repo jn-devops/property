@@ -2,7 +2,8 @@
 
 namespace Homeful\Property\Traits;
 
-use Homeful\Common\Enums\WorkArea;
+use Brick\Math\RoundingMode;
+use Homeful\Property\Enums\Charge;
 use Homeful\Property\Exceptions\MaximumContractPriceBreached;
 use Homeful\Property\Exceptions\MinimumContractPriceBreached;
 use Brick\Math\Exception\RoundingNecessaryException;
@@ -13,7 +14,9 @@ use Homeful\Property\Enums\DevelopmentType;
 use Homeful\Property\Enums\MarketSegment;
 use Brick\Math\Exception\MathException;
 use Homeful\Property\Enums\HousingType;
+use Homeful\Common\Enums\WorkArea;
 use Homeful\Property\Property;
+use Illuminate\Support\Collection;
 use Whitecube\Price\Price;
 use Brick\Money\Money;
 
@@ -202,5 +205,56 @@ trait HasProperties
     public function getStoreys(): int
     {
         return $this->storeys ?? 0;
+    }
+
+    /**
+     * @param Charge $charge
+     * @return HasProperties|Property
+     */
+    public function addCharge(Charge $charge): self
+    {
+        $found = false;
+        $this->charges->each(function (Charge $item) use (&$found, $charge) {
+            $found = $found || $item == $charge;
+        });
+
+        !$found && $this->charges->add($charge);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getCharges(): Collection
+    {
+        return $this->charges;
+    }
+
+    /**
+     * @return Price
+     * @throws \Brick\Math\Exception\NumberFormatException
+     * @throws \Brick\Math\Exception\RoundingNecessaryException
+     * @throws \Brick\Money\Exception\UnknownCurrencyException
+     */
+    public function getFees(): Price
+    {
+        $fees = new Price(Money::of(0, 'PHP'));
+        $this->charges->each(function (Charge $item) use ($fees) {
+            $fees->addModifier($item->getName(), $item->getPrice(), roundingMode: RoundingMode::CEILING);
+        });
+
+        return $fees;
+    }
+
+    /**
+     * @return Price
+     * @throws NumberFormatException
+     * @throws RoundingNecessaryException
+     * @throws UnknownCurrencyException
+     */
+    public function getSellingPrice(): Price
+    {
+        return $this->getTotalContractPrice()->addModifier('charges', $this->getFees(), roundingMode: RoundingMode::CEILING);
     }
 }

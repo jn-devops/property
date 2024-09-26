@@ -8,6 +8,7 @@ use Homeful\Common\Classes\{Assert, Input};
 use Homeful\Property\Data\PropertyData;
 use Homeful\Common\Enums\WorkArea;
 use Homeful\Common\Classes\Amount;
+use Homeful\Property\Enums\Charge;
 use Homeful\Property\Property;
 use Mockery\MockInterface;
 use Whitecube\Price\Price;
@@ -207,6 +208,13 @@ it('has property data', function () {
     expect($data->storeys)->toBe($property->getStoreys());
     expect($data->floor_area)->toBe($property->getFloorArea());
     expect($property->getPriceCeiling()->inclusive()->compareTo($data->price_ceiling))->toBe(Amount::EQUAL);
+    expect($property->getFees()->inclusive()->compareTo($data->fees))->toBe(Amount::EQUAL);
+    $fee_structure = [];
+    $property->getCharges()->each(function(Charge $charge) use (&$fee_structure) {
+        $fee_structure[$charge->getName()] = $charge->getPrice()->inclusive()->getAmount()->toFloat();
+    });
+    expect(json_encode($fee_structure))->toBe($data->fee_structure);
+    expect($property->getSellingPrice()->inclusive()->compareTo($data->selling_price))->toBe(Amount::EQUAL);
 });
 
 dataset('borrower-30yo-25k_gmi', function () {
@@ -339,3 +347,16 @@ it('can derive price ceiling', function (array $params) {
     expect($property->getPriceCeiling()->inclusive()->compareTo($params[Assert::PRICE_CEILING]))->toBe(Amount::EQUAL);
 
 })->with('price ceiling simulation');
+
+it('has a collection of charges and selling price', function () {
+    $property = new Property;
+    $property->setTotalContractPrice(500000);
+    $property->addCharge(Charge::PROCESSING_FEE);
+    $property->addCharge(Charge::HOME_UTILITY_CONNECTION_FEE);
+    $total =
+        Charge::PROCESSING_FEE->getPrice()->inclusive()->getAmount()->toFloat()  +
+        Charge::HOME_UTILITY_CONNECTION_FEE->getPrice()->inclusive()->getAmount()->toFloat();
+    expect($property->getFees()->inclusive()->compareTo($total))->toBe(Amount::EQUAL);
+    $tcp = $property->getTotalContractPrice()->inclusive()->getAmount()->toFloat();
+    expect($property->getSellingPrice()->inclusive()->compareTo($tcp + $total))->toBe(Amount::EQUAL);
+});
