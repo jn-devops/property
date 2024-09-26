@@ -5,6 +5,7 @@ use Homeful\Property\Exceptions\MaximumContractPriceBreached;
 use Homeful\Property\Exceptions\MinimumContractPriceBreached;
 use Homeful\Common\Interfaces\BorrowerInterface;
 use Homeful\Common\Classes\{Assert, Input};
+use Homeful\Property\Classes\Appraisal;
 use Homeful\Property\Data\PropertyData;
 use Homeful\Common\Enums\WorkArea;
 use Homeful\Common\Classes\Amount;
@@ -359,4 +360,13 @@ it('has a collection of charges and selling price', function () {
     expect($property->getFees()->inclusive()->compareTo($total))->toBe(Amount::EQUAL);
     $tcp = $property->getTotalContractPrice()->inclusive()->getAmount()->toFloat();
     expect($property->getSellingPrice()->inclusive()->compareTo($tcp + $total))->toBe(Amount::EQUAL);
+});
+
+it('has an appraisal', function () {
+    $property = new Property;
+    $appraisal = new Appraisal(147000, 695000);
+    $property->setAppraisal($appraisal);
+    expect($property->getAppraisal()->getLotAppraisal()->inclusive()->compareTo($appraisal->getLotAppraisal()->inclusive()))->toBe(Amount::EQUAL);
+    expect($property->getAppraisal()->getHouseAppraisal()->inclusive()->compareTo($appraisal->getHouseAppraisal()->inclusive()))->toBe(Amount::EQUAL);
+    expect($property->getAppraisal()->getTotalAppraisal()->inclusive()->compareTo($appraisal->getTotalAppraisal()->inclusive()))->toBe(Amount::EQUAL);
 });

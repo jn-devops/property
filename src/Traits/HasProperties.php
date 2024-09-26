@@ -2,8 +2,6 @@
 
 namespace Homeful\Property\Traits;
 
-use Brick\Math\RoundingMode;
-use Homeful\Property\Enums\Charge;
 use Homeful\Property\Exceptions\MaximumContractPriceBreached;
 use Homeful\Property\Exceptions\MinimumContractPriceBreached;
 use Brick\Math\Exception\RoundingNecessaryException;
@@ -15,8 +13,10 @@ use Homeful\Property\Enums\MarketSegment;
 use Brick\Math\Exception\MathException;
 use Homeful\Property\Enums\HousingType;
 use Homeful\Common\Enums\WorkArea;
-use Homeful\Property\Property;
 use Illuminate\Support\Collection;
+use Homeful\Property\Enums\Charge;
+use Homeful\Property\Property;
+use Brick\Math\RoundingMode;
 use Whitecube\Price\Price;
 use Brick\Money\Money;
 
@@ -103,6 +103,7 @@ trait HasProperties
     }
 
     /**
+     * @deprecated
      * @param Price|Money|float $value
      * @return Property|HasProperties
      *
@@ -122,6 +123,8 @@ trait HasProperties
     }
 
     /**
+     * @deprecated
+     *
      * @throws \Brick\Math\Exception\NumberFormatException
      * @throws \Brick\Math\Exception\RoundingNecessaryException
      * @throws \Brick\Money\Exception\UnknownCurrencyException

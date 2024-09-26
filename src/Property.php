@@ -3,6 +3,7 @@
 namespace Homeful\Property;
 
 use Homeful\Common\Interfaces\BorrowerInterface;
+use Homeful\Property\Classes\Appraisal;
 use Homeful\Property\Enums\Charge;
 use Homeful\Property\Traits\HasCalculations;
 use Homeful\Property\Enums\DevelopmentType;
@@ -25,6 +26,7 @@ use Brick\Money\Money;
  * @property float $floor_area
  * @property int $storeys
  * @property Collection $charges
+ * @property Appraisal $appraisal
  *
  * @method Property setMarketSegment(MarketSegment $market_segment)
  * @method MarketSegment getMarketSegment()
@@ -76,6 +78,7 @@ class Property
     protected float $floor_area;
     protected int $storeys;
     protected Collection $charges;
+    protected Appraisal $appraisal;
 
     /**
      * arbitrary floor price
@@ -90,5 +93,24 @@ class Property
     public function __construct()
     {
         $this->charges = new Collection;
+    }
+
+    /**
+     * @param Appraisal $appraisal
+     * @return $this
+     */
+    public function setAppraisal(Appraisal $appraisal): self
+    {
+        $this->appraisal = $appraisal;
+
+        return $this;
+    }
+
+    /**
+     * @return Appraisal
+     */
+    public function getAppraisal(): Appraisal
+    {
+        return $this->appraisal;
     }
 }
