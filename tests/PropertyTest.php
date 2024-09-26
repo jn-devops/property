@@ -202,6 +202,11 @@ it('has property data', function () {
     expect($data->loanable_value)->toBe($property->getLoanableValue()->inclusive()->getAmount()->toFloat());
     expect($data->disposable_income_requirement_multiplier)->toBe($property->getDefaultDisposableIncomeRequirementMultiplier());
     expect($data->default_disposable_income_requirement_multiplier)->toBe($property->getDefaultDisposableIncomeRequirementMultiplier());
+    expect($data->development_type)->toBe($property->getDevelopmentType()->getName());
+    expect($data->housing_type)->toBe($property->getHousingType()->getName());
+    expect($data->storeys)->toBe($property->getStoreys());
+    expect($data->floor_area)->toBe($property->getFloorArea());
+    expect($property->getPriceCeiling()->inclusive()->compareTo($data->price_ceiling))->toBe(Amount::EQUAL);
 });
 
 dataset('borrower-30yo-25k_gmi', function () {

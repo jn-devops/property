@@ -19,6 +19,10 @@ use Brick\Money\Money;
 
 trait HasProperties
 {
+    /**
+     * @param MarketSegment $market_segment
+     * @return Property|HasProperties
+     */
     public function setMarketSegment(MarketSegment $market_segment): self
     {
         $this->market_segment = $market_segment;
@@ -26,11 +30,18 @@ trait HasProperties
         return $this;
     }
 
+    /**
+     * @return MarketSegment
+     */
     public function getMarketSegment(): MarketSegment
     {
         return $this->market_segment ?? MarketSegment::fromPrice($this->total_contract_price);
     }
 
+    /**
+     * @param WorkArea $work_area
+     * @return HasProperties|Property
+     */
     public function setWorkArea(WorkArea $work_area): self
     {
         $this->work_area = $work_area;
@@ -38,6 +49,9 @@ trait HasProperties
         return $this;
     }
 
+    /**
+     * @return WorkArea
+     */
     public function getWorkArea(): WorkArea
     {
         return $this->work_area ?? WorkArea::default();
@@ -86,11 +100,12 @@ trait HasProperties
     }
 
     /**
-     * @return $this
+     * @param Price|Money|float $value
+     * @return Property|HasProperties
      *
-     * @throws \Brick\Math\Exception\NumberFormatException
-     * @throws \Brick\Math\Exception\RoundingNecessaryException
-     * @throws \Brick\Money\Exception\UnknownCurrencyException
+     * @throws NumberFormatException
+     * @throws RoundingNecessaryException
+     * @throws UnknownCurrencyException
      */
     public function setAppraisedValue(Price|Money|float $value): self
     {
@@ -113,6 +128,10 @@ trait HasProperties
         return $this->appraised_value ?? new Price(Money::of(0, 'PHP'));
     }
 
+    /**
+     * @param DevelopmentType $type
+     * @return HasProperties|Property
+     */
     public function setDevelopmentType(DevelopmentType $type): self
     {
         $this->development_type = $type;
@@ -120,11 +139,18 @@ trait HasProperties
         return $this;
     }
 
+    /**
+     * @return DevelopmentType
+     */
     public function getDevelopmentType(): DevelopmentType
     {
         return $this->development_type ?? DevelopmentType::BP_220;
     }
 
+    /**
+     * @param HousingType $type
+     * @return HasProperties|Property
+     */
     public function setHousingType(HousingType $type): self
     {
         $this->housing_type = $type;
@@ -132,11 +158,18 @@ trait HasProperties
         return $this;
     }
 
+    /**
+     * @return HousingType
+     */
     public function getHousingType(): HousingType
     {
         return $this->housing_type ?? HousingType::SINGLE_DETACHED;
     }
 
+    /**
+     * @param float $value
+     * @return HasProperties|Property
+     */
     public function setFloorArea(float $value): self
     {
         $this->floor_area = $value;
@@ -144,11 +177,18 @@ trait HasProperties
         return $this;
     }
 
+    /**
+     * @return float
+     */
     public function getFloorArea(): float
     {
         return $this->floor_area ?? 0.0;
     }
 
+    /**
+     * @param int $value
+     * @return HasProperties|Property
+     */
     public function setStoreys(int $value): self
     {
         $this->storeys = $value;
@@ -156,6 +196,9 @@ trait HasProperties
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getStoreys(): int
     {
         return $this->storeys ?? 0;
