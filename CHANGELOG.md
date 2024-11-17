@@ -2,6 +2,10 @@
 
 All notable changes to `property` will be documented in this file.
 
+## #v1.1.6 - 2024-11-17
+
+add calculations and add exception messages
+
 ## #v1.1.5 - 2024-09-26
 
 add appraisal
