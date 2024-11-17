@@ -119,25 +119,30 @@ trait HasCalculations
     }
 
     /**
-     * @throws \Brick\Math\Exception\MathException
-     * @throws \Brick\Money\Exception\MoneyMismatchException
+     * @param Price $total_contract_price
+     * @param Price $gross_monthly_income
+     * @param bool $regional
+     * @return float
      */
     protected function getDefaultAnnualInterestRate(Price $total_contract_price, Price $gross_monthly_income, bool $regional): float
     {
-        return match (true) {
-            $this->getMarketSegment() == MarketSegment::OPEN => 0.07,
-            default => match (true) {
-                $total_contract_price->inclusive()->compareTo(750000) <= 0 => ($regional
-                    ? ($gross_monthly_income->inclusive()->compareTo(12000) <= 0 ? 0.030 : 0.0625)
-                    : ($gross_monthly_income->inclusive()->compareTo(14500) <= 0 ? 0.030 : 0.0625)),
-                $total_contract_price->inclusive()->compareTo(800000) <= 0 => ($regional
-                    ? ($gross_monthly_income->inclusive()->compareTo(13000) <= 0 ? 0.030 : 0.0625)
-                    : ($gross_monthly_income->inclusive()->compareTo(15500) <= 0 ? 0.030 : 0.0625)),
-                $total_contract_price->inclusive()->compareTo(850000) <= 0 => ($regional
-                    ? ($gross_monthly_income->inclusive()->compareTo(15000) <= 0 ? 0.030 : 0.0625)
-                    : ($gross_monthly_income->inclusive()->compareTo(16500) <= 0 ? 0.030 : 0.0625)),
+        $tcp = $total_contract_price->inclusive()->getAmount()->toFloat();
+        $gmi = $gross_monthly_income->inclusive()->getAmount()->toFloat();
+
+        return match($this->getMarketSegment()) {
+            MarketSegment::SOCIALIZED, MarketSegment::ECONOMIC => match (true) {
+                $tcp <= 750000 => $regional
+                    ? ($gmi <= 12000 ? 0.030 : 0.0625)
+                    : ($gmi <= 14500 ? 0.030 : 0.0625),
+                $tcp <= 800000 => $regional
+                    ? ($gmi <= 13000 ? 0.030 : 0.0625)
+                    : ($gmi <= 15500 ? 0.030 : 0.0625),
+                $tcp <= 850000 => $regional
+                    ? ($gmi <= 15000 ? 0.030 : 0.0625)
+                    : ($gmi <= 16500 ? 0.030 : 0.0625),
                 default => 0.0625,
-            }
+            },
+            MarketSegment::OPEN => 0.07,
         };
     }
 
