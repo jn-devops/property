@@ -2,14 +2,14 @@
 
 namespace Homeful\Property;
 
+use Homeful\Property\Traits\{HasCalculations, HasProduct, HasProperties};
 use Homeful\Common\Interfaces\BorrowerInterface;
-use Homeful\Property\Classes\Appraisal;
-use Homeful\Property\Enums\Charge;
-use Homeful\Property\Traits\HasCalculations;
+use Homeful\Common\Interfaces\ProductInterface;
 use Homeful\Property\Enums\DevelopmentType;
-use Homeful\Property\Traits\HasProperties;
 use Homeful\Property\Enums\MarketSegment;
 use Homeful\Property\Enums\HousingType;
+use Homeful\Property\Classes\Appraisal;
+use Homeful\Property\Enums\Charge;
 use Illuminate\Support\Collection;
 use Homeful\Common\Enums\WorkArea;
 use Whitecube\Price\Price;
@@ -59,13 +59,23 @@ use Brick\Money\Money;
  * @method float getDefaultAnnualInterestRateFromBorrower(BorrowerInterface $borrower)
  * @method float getDefaultAnnualInterestRate(Price $total_contract_price, Price $gross_monthly_income, bool $regional)
  * @method Price getPriceCeiling()
- *
+ * @method string getSKU()
+ * @method Property setSKU(string $value)
+ * @method Price getProcessingFee()
+ * @method Property setProcessingFee(Price|float $value)
+ * @method float getPercentDownPayment()
+ * @method Property setPercentDownPayment(float $value)
+ * @method int getDownPaymentTerm()
+ * @method Property setDownPaymentTerm(int $value)
+ * @method float getPercentMiscellaneousFees()
+ * @method Property setPercentMiscellaneousFees(float $value)
  */
 
-class Property
+class Property implements ProductInterface
 {
-    use HasProperties;
     use HasCalculations;
+    use HasProperties;
+    use HasProduct;
 
     protected MarketSegment $market_segment;
     protected Price $total_contract_price;

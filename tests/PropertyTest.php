@@ -370,3 +370,22 @@ it('has an appraisal', function () {
     expect($property->getAppraisal()->getHouseAppraisal()->inclusive()->compareTo($appraisal->getHouseAppraisal()->inclusive()))->toBe(Amount::EQUAL);
     expect($property->getAppraisal()->getTotalAppraisal()->inclusive()->compareTo($appraisal->getTotalAppraisal()->inclusive()))->toBe(Amount::EQUAL);
 });
+
+it('implements product interface', function () {
+    $property = new Property;
+    expect($property->getSKU())->toBe('');
+    $property->setSKU('sku');
+    expect($property->getSKU())->toBe('sku');
+    expect($property->getProcessingFee()->inclusive()->compareTo(10000))->toBe(Amount::EQUAL);
+    $property->setProcessingFee(8000);
+    expect($property->getProcessingFee()->inclusive()->compareTo(8000))->toBe(Amount::EQUAL);
+    expect($property->getPercentDownPayment())->toBe(10/100);
+    $property->setPercentDownPayment(8/100);
+    expect($property->getPercentDownPayment())->toBe(8/100);
+    expect($property->getDownPaymentTerm())->toBe(12);
+    $property->setDownPaymentTerm(6);
+    expect($property->getDownPaymentTerm())->toBe(6);
+    expect($property->getPercentMiscellaneousFees())->toBe(8.5/100);
+    $property->setPercentMiscellaneousFees(5/100);
+    expect($property->getPercentMiscellaneousFees())->toBe(5/100);
+});
