@@ -2,6 +2,10 @@
 
 All notable changes to `property` will be documented in this file.
 
+## #v1.1.7 - 2024-12-24
+
+implement product interface
+
 ## #v1.1.6 - 2024-11-17
 
 add calculations and add exception messages
