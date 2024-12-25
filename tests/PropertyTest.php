@@ -194,8 +194,9 @@ it('has default and settable disposable income requirement', function () {
 
 it('has property data', function () {
     $property = new Property;
-    $property->setTotalContractPrice(new Price(Money::of(750000, 'PHP')))->setAppraisedValue(new Price(Money::of(740000, 'PHP')));
+    $property->setSKU('XXX')->setTotalContractPrice(new Price(Money::of(750000, 'PHP')))->setAppraisedValue(new Price(Money::of(740000, 'PHP')));
     $data = PropertyData::fromObject($property);
+    expect($data->sku)->toBe($property->getSKU());
     expect($data->market_segment)->toBe($property->getMarketSegment()->getName());
     expect($data->total_contract_price)->toBe($property->getTotalContractPrice()->inclusive()->getAmount()->toFloat());
     expect($data->appraised_value)->toBe($property->getAppraisedValue()->inclusive()->getAmount()->toFloat());

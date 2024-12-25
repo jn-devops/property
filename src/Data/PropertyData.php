@@ -12,6 +12,7 @@ use Spatie\LaravelData\Data;
 class PropertyData extends Data
 {
     public function __construct(
+        public string $sku,
         public string $market_segment,
         public float $total_contract_price,
         public float $appraised_value,
@@ -44,6 +45,7 @@ class PropertyData extends Data
         });
 
         return new self(
+            sku: $property->getSKU(),
             market_segment: $property->getMarketSegment()->getName(),
             total_contract_price: $property->getTotalContractPrice()->inclusive()->getAmount()->toFloat(),
             appraised_value: $property->getAppraisedValue()->inclusive()->getAmount()->toFloat(),
