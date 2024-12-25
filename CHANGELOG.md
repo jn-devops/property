@@ -2,6 +2,10 @@
 
 All notable changes to `property` will be documented in this file.
 
+## #v1.1.8 - 2024-12-25
+
+add sku to property data
+
 ## #v1.1.7 - 2024-12-24
 
 implement product interface
