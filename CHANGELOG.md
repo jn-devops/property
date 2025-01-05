@@ -2,6 +2,10 @@
 
 All notable changes to `property` will be documented in this file.
 
+## #v1.1.9 - 2025-01-05
+
+add name, brand and category to property class
+
 ## #v1.1.8 - 2024-12-25
 
 add sku to property data
