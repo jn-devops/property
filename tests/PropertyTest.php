@@ -194,7 +194,13 @@ it('has default and settable disposable income requirement', function () {
 
 it('has property data', function () {
     $property = new Property;
-    $property->setSKU('XXX')->setTotalContractPrice(new Price(Money::of(750000, 'PHP')))->setAppraisedValue(new Price(Money::of(740000, 'PHP')));
+    $property->setSKU('XXX')
+        ->setTotalContractPrice(new Price(Money::of(750000, 'PHP')))
+        ->setAppraisedValue(new Price(Money::of(740000, 'PHP')))
+        ->setName(fake()->word())
+        ->setBrand(fake()->word())
+        ->setCategory(fake()->word())
+    ;
     $data = PropertyData::fromObject($property);
     expect($data->sku)->toBe($property->getSKU());
     expect($data->market_segment)->toBe($property->getMarketSegment()->getName());
@@ -217,6 +223,9 @@ it('has property data', function () {
     });
     expect(json_encode($fee_structure))->toBe($data->fee_structure);
     expect($property->getSellingPrice()->inclusive()->compareTo($data->selling_price))->toBe(Amount::EQUAL);
+    expect($data->name)->toBe($property->getName());
+    expect($data->brand)->toBe($property->getBrand());
+    expect($data->category)->toBe($property->getCategory());
 });
 
 dataset('borrower-30yo-25k_gmi', function () {

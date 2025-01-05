@@ -29,7 +29,10 @@ class PropertyData extends Data
         public float $price_ceiling,
         public float $fees,
         public string $fee_structure,
-        public float $selling_price
+        public float $selling_price,
+        public string $name,
+        public string $brand,
+        public string $category,
     ) {}
 
     /**
@@ -62,7 +65,10 @@ class PropertyData extends Data
             price_ceiling: $property->getPriceCeiling()->inclusive()->getAmount()->toFloat(),
             fees: $property->getFees()->inclusive()->getAmount()->toFloat(),
             fee_structure: json_encode($fee_structure),
-            selling_price: $property->getSellingPrice()->inclusive()->getAmount()->toFloat()
+            selling_price: $property->getSellingPrice()->inclusive()->getAmount()->toFloat(),
+            name: $property->getName(),
+            brand: $property->getBrand(),
+            category: $property->getCategory()
         );
     }
 }

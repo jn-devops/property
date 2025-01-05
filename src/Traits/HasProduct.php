@@ -12,6 +12,10 @@ trait HasProduct
     protected float $percent_dp;
     protected int $dp_term;
     protected float $percent_mf;
+    protected string $name = '';
+    protected string $brand = '';
+    protected string $category = '';
+
 
     public function getSKU(): string
     {
@@ -74,5 +78,41 @@ trait HasProduct
         $this->percent_mf = $value;
 
         return $this;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $value): self
+    {
+        $this->name = $value;
+
+        returN $this;
+    }
+
+    public function getBrand(): string
+    {
+        return $this->brand;
+    }
+
+    public function setBrand(string $value): self
+    {
+        $this->brand = $value;
+
+        returN $this;
+    }
+
+    public function getCategory(): string
+    {
+        return $this->category;
+    }
+
+    public function setCategory(string $value): self
+    {
+        $this->category = $value;
+
+        returN $this;
     }
 }
