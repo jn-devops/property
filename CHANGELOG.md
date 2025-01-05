@@ -2,6 +2,10 @@
 
 All notable changes to `property` will be documented in this file.
 
+## #v1.2.1 - 2025-01-05
+
+test name, brand and category in property
+
 ## #v1.2.0 - 2025-01-05
 
 add getName(), getBrand(), getCategory() comments to Property class
