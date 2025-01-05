@@ -386,6 +386,15 @@ it('implements product interface', function () {
     expect($property->getSKU())->toBe('');
     $property->setSKU('sku');
     expect($property->getSKU())->toBe('sku');
+    expect($property->getName())->toBe('');
+    $property->setName('name');
+    expect($property->getName())->toBe('name');
+    expect($property->getBrand())->toBe('');
+    $property->setBrand('brand');
+    expect($property->getBrand())->toBe('brand');
+    expect($property->getCategory())->toBe('');
+    $property->setCategory('category');
+    expect($property->getCategory())->toBe('category');
     expect($property->getProcessingFee()->inclusive()->compareTo(10000))->toBe(Amount::EQUAL);
     $property->setProcessingFee(8000);
     expect($property->getProcessingFee()->inclusive()->compareTo(8000))->toBe(Amount::EQUAL);
