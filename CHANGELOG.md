@@ -2,6 +2,10 @@
 
 All notable changes to `property` will be documented in this file.
 
+## #v1.2.2 - 2025-01-17
+
+add twin homes to housing type enums'
+
 ## #v1.2.1 - 2025-01-05
 
 test name, brand and category in property
