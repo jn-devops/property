@@ -2,6 +2,10 @@
 
 All notable changes to `property` will be documented in this file.
 
+## #v1.2.4 - 2025-01-17
+
+fix town house enum
+
 ## #v1.2.3 - 2025-01-17
 
 add Town House to Housing Type enum
