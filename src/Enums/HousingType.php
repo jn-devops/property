@@ -10,6 +10,7 @@ enum HousingType
     case SINGLE_ATTACHED;
     case SINGLE_DETACHED;
     case QUADRUPLEX;
+    case TOWN_HOUSE;
     case TWIN_HOMES;
 
     public function getName(): string
@@ -21,6 +22,7 @@ enum HousingType
             self::SINGLE_ATTACHED => 'Single Attached',
             self::SINGLE_DETACHED => 'Single Detached',
             self::QUADRUPLEX => 'Quadruplex',
+            self::TOWN_HOUSE => 'Town House',
             self::TWIN_HOMES => 'Twin Homes'
         };
     }
