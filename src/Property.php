@@ -104,7 +104,7 @@ class Property implements ProductInterface
     /**
      * arbitrary ceiling price
      */
-    const MAXIMUM_CONTRACT_PRICE = 5000000; //₱5M
+    const MAXIMUM_CONTRACT_PRICE = 10000000; //₱10M
 
     public function __construct()
     {
