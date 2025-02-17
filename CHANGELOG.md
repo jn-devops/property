@@ -2,6 +2,10 @@
 
 All notable changes to `property` will be documented in this file.
 
+## #v1.2.5 - 2025-02-17
+
+set MAXIMUM_CONTRACT_PRICE to 10M
+
 ## #v1.2.4 - 2025-01-17
 
 fix town house enum
