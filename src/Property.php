@@ -2,7 +2,7 @@
 
 namespace Homeful\Property;
 
-use Homeful\Property\Traits\{HasCalculations, HasProduct, HasProperties};
+use Homeful\Property\Traits\{HasCalculations, HasFees, HasProduct, HasProperties};
 use Homeful\Common\Interfaces\BorrowerInterface;
 use Homeful\Common\Interfaces\ProductInterface;
 use Homeful\Property\Enums\DevelopmentType;
@@ -82,6 +82,7 @@ class Property implements ProductInterface
     use HasCalculations;
     use HasProperties;
     use HasProduct;
+    use HasFees;
 
     protected MarketSegment $market_segment;
     protected Price $total_contract_price;
