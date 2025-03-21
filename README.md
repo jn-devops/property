@@ -1,84 +1,155 @@
 # Homeful Property Package
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/jn-devops/property.svg?style=flat-square)](https://packagist.org/packages/jn-devops/property)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/jn-devops/property/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/jn-devops/property/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/jn-devops/property/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/jn-devops/property/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/jn-devops/property.svg?style=flat-square)](https://packagist.org/packages/jn-devops/property)
+The **Homeful Property Package** provides a structured way to handle property-related data, including total contract price validation, market segments, housing types, development types, loanable value calculations, fees, and more.
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+## Table of Contents
+- [Installation](#installation)
+- [Usage](#usage)
+- [Classes](#classes)
+- [Traits](#traits)
+- [Enumerations](#enumerations)
+- [Tests](#tests)
 
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/property.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/property)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+---
 
 ## Installation
 
-You can install the package via composer:
+To install the package, use Composer:
 
-```bash
-composer require jn-devops/property
+```sh
+composer require homeful/property
 ```
 
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag="property-migrations"
-php artisan migrate
-```
-
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag="property-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="property-views"
-```
+---
 
 ## Usage
 
+### Creating a Property Instance
+
 ```php
-$property = new Homeful\Property();
-echo $property->echoPhrase('Hello, Homeful!');
+use Homeful\Property\Property;
+use Whitecube\Price\Price;
+use Brick\Money\Money;
+
+$property = new Property;
+$property->setTotalContractPrice(new Price(Money::of(1500000, 'PHP')));
 ```
 
-## Testing
+### Setting and Retrieving Market Segments
 
-```bash
-composer test
+```php
+use Homeful\Property\Enums\MarketSegment;
+
+$property->setMarketSegment(MarketSegment::ECONOMIC);
+echo $property->getMarketSegment()->getName(); // Outputs "economic"
 ```
 
-## Changelog
+---
 
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+## Classes
 
-## Contributing
+### Property
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+The core class representing a property.
 
-## Security Vulnerabilities
+#### Properties:
+- `total_contract_price`: Total contract price as a `Price` object.
+- `appraised_value`: Appraised value as a `Price` object.
+- `development_type`: The development type as an `Enum`.
+- `housing_type`: The housing type as an `Enum`.
+- `market_segment`: The market segment as an `Enum`.
+- `work_area`: The work area as an `Enum`.
+- `loanable_value_multiplier`: Loanable value multiplier.
+- `disposableIncomeRequirementMultiplier`: Disposable income requirement multiplier.
+- `storeys`: Number of storeys.
+- `floor_area`: Floor area.
+- `charges`: Collection of additional property charges.
+- `appraisal`: Appraisal details.
 
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
+#### Methods:
+- `setTotalContractPrice(Price|Money|float $value)`
+- `getTotalContractPrice(): Price`
+- `setMarketSegment(MarketSegment $market_segment)`
+- `getMarketSegment(): MarketSegment`
+- `setAppraisedValue(Price|Money|float $value)`
+- `getAppraisedValue(): Price`
+- `setDevelopmentType(DevelopmentType $type)`
+- `getDevelopmentType(): DevelopmentType`
+- `setHousingType(HousingType $type)`
+- `getHousingType(): HousingType`
+- `setLoanableValueMultiplier(float $value)`
+- `getLoanableValueMultiplier(): float`
+- `getLoanableValue(): Price`
+- `getDefaultAnnualInterestRateFromBorrower(BorrowerInterface $borrower): float`
+- `getPriceCeiling(): Price`
+- `addCharge(Charge $charge)`
+- `getFees(): Price`
+- `getSellingPrice(): Price`
 
-## Credits
+---
 
-- [Lester B. Hurtado](https://github.com/jn-devops)
-- [All Contributors](../../contributors)
+## Traits
 
-## License
+### HasCalculations
+Handles loanable value, interest rates, and disposable income multipliers.
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+### HasFees
+Handles mortgage redemption insurance and annual fire insurance calculations.
+
+### HasProduct
+Handles product-related attributes like SKU, processing fees, and down payment terms.
+
+### HasProperties
+Handles property attributes such as housing type, total contract price, and work area.
+
+---
+
+## Enumerations
+
+### MarketSegment
+Defines the property market segment:
+- `OPEN`
+- `ECONOMIC`
+- `SOCIALIZED`
+
+### DevelopmentType
+Defines the type of development:
+- `BP_957`
+- `BP_220`
+
+### HousingType
+Defines the type of housing unit:
+- `CONDOMINIUM`
+- `DUPLEX`
+- `ROW_HOUSE`
+- `SINGLE_ATTACHED`
+- `SINGLE_DETACHED`
+- `QUADRUPLEX`
+- `TOWNHOUSE`
+- `TWIN_HOMES`
+
+### Charge
+Defines property-related charges:
+- `PROCESSING_FEE`
+- `HOME_UTILITY_CONNECTION_FEE`
+
+---
+
+## Tests
+
+The package includes a series of tests to validate:
+- Minimum and maximum total contract price
+- Market segment determination
+- Housing type assignment
+- Development type assignment
+- Loanable value calculation
+- Price ceiling determination
+- Default interest rate based on income and location
+- Charge and fee calculations
+- Product attributes
+
+To run tests:
+
+```sh
+vendor/bin/pest
+```
